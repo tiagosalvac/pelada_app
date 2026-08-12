@@ -2,7 +2,7 @@ import { NavLink, Outlet } from 'react-router-dom'
 
 const linkClass = ({ isActive }) =>
   `px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-    isActive ? 'bg-emerald-600 text-white' : 'text-neutral-600 hover:bg-neutral-100'
+    isActive ? 'bg-brand-600 text-white' : 'text-neutral-600 hover:bg-neutral-100'
   }`
 
 export default function AdminLayout() {
@@ -10,7 +10,10 @@ export default function AdminLayout() {
     <div className="min-h-screen bg-neutral-50">
       <header className="border-b border-neutral-200 bg-white">
         <div className="mx-auto flex max-w-4xl items-center justify-between px-4 py-3">
-          <span className="font-semibold text-neutral-900">Pelada App · Admin</span>
+          <span className="flex items-center gap-2 font-semibold text-neutral-900">
+            <img src="/logo.png" alt="" className="h-8 w-8 rounded-full object-cover" />
+            Pelada da VT · Admin
+          </span>
           <nav className="flex gap-1">
             <NavLink to="/admin/jogadores" className={linkClass}>
               Jogadores

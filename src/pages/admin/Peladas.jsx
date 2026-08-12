@@ -10,7 +10,7 @@ const STATUS_LABEL = {
 }
 
 const STATUS_CLASSE = {
-  em_andamento: 'bg-emerald-50 text-emerald-700',
+  em_andamento: 'bg-brand-50 text-brand-700',
   finalizada: 'bg-neutral-100 text-neutral-500',
 }
 
@@ -155,7 +155,7 @@ export default function AdminPeladas() {
             required
             value={dataForm}
             onChange={(e) => setDataForm(e.target.value)}
-            className="rounded-md border border-neutral-300 px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+            className="rounded-md border border-neutral-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
           />
         </label>
 
@@ -165,7 +165,7 @@ export default function AdminPeladas() {
               Quem vai jogar? {selecionados.size > 0 && `(${selecionados.size} selecionado${selecionados.size > 1 ? 's' : ''})`}
             </span>
             <div className="flex gap-3 text-xs">
-              <button type="button" onClick={selecionarTodos} className="text-emerald-700 hover:underline">
+              <button type="button" onClick={selecionarTodos} className="text-brand-700 hover:underline">
                 Selecionar todos
               </button>
               <button type="button" onClick={limparSelecao} className="text-neutral-400 hover:underline">
@@ -177,7 +177,7 @@ export default function AdminPeladas() {
           {jogadores.length === 0 ? (
             <p className="text-sm text-neutral-400">
               Nenhum jogador cadastrado ainda.{' '}
-              <Link to="/admin/jogadores" className="text-emerald-700 hover:underline">
+              <Link to="/admin/jogadores" className="text-brand-700 hover:underline">
                 Cadastre jogadores
               </Link>{' '}
               antes de criar uma pelada.
@@ -190,14 +190,14 @@ export default function AdminPeladas() {
                   <label
                     key={jogador.id}
                     className={`flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-sm ${
-                      marcado ? 'bg-emerald-50' : 'hover:bg-neutral-50'
+                      marcado ? 'bg-brand-50' : 'hover:bg-neutral-50'
                     }`}
                   >
                     <input
                       type="checkbox"
                       checked={marcado}
                       onChange={() => alternarSelecionado(jogador.id)}
-                      className="h-4 w-4 accent-emerald-600"
+                      className="h-4 w-4 accent-brand-600"
                     />
                     <JogadorAvatar jogador={jogador} className="h-7 w-7 text-xs" />
                     <div className="min-w-0 flex-1">
@@ -216,7 +216,7 @@ export default function AdminPeladas() {
         <button
           type="submit"
           disabled={criando}
-          className="rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-50"
+          className="rounded-md bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-50"
         >
           {criando ? 'Criando...' : 'Criar pelada'}
         </button>
@@ -246,7 +246,7 @@ export default function AdminPeladas() {
 
                 <Link
                   to={`/admin/peladas/${pelada.id}`}
-                  className="rounded-md px-3 py-1.5 text-sm font-medium text-emerald-700 hover:bg-emerald-50"
+                  className="rounded-md px-3 py-1.5 text-sm font-medium text-brand-700 hover:bg-brand-50"
                 >
                   Montar times
                 </Link>

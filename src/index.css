@@ -1,1 +1,17 @@
 @import "tailwindcss";
+
+/* Cores da "Pelada da VT", extraídas do escudo (public/logo.png). */
+@theme {
+  --color-brand-50: #f3f5fa;
+  --color-brand-100: #e2e8f3;
+  --color-brand-200: #c0cde6;
+  --color-brand-300: #99aed6;
+  --color-brand-400: #597cbd;
+  --color-brand-500: #2d5aac;
+  --color-brand-600: #0b3f9e;
+  --color-brand-700: #093585;
+  --color-brand-800: #082c6f;
+  --color-brand-900: #062357;
+  --color-gold-400: #f9c404;
+  --color-gold-500: #ffbc03;
+}

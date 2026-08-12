@@ -106,7 +106,7 @@ export default function JogadorAvaliar() {
     return (
       <div className="space-y-2">
         <p className="text-sm text-neutral-400">Nenhuma votação de MVP aberta pra você no momento.</p>
-        <Link to="/jogador/resultado" className="text-sm text-emerald-700 hover:underline">
+        <Link to="/jogador/resultado" className="text-sm text-brand-700 hover:underline">
           Ver resultado da última pelada →
         </Link>
       </div>
@@ -140,12 +140,12 @@ export default function JogadorAvaliar() {
                   type="button"
                   onClick={() => setEscolha(colega.id)}
                   className={`flex w-full items-center gap-3 px-4 py-3 text-left transition-colors ${
-                    selecionado ? 'bg-emerald-50' : 'hover:bg-neutral-50'
+                    selecionado ? 'bg-brand-50' : 'hover:bg-neutral-50'
                   }`}
                 >
                   <JogadorAvatar jogador={colega} />
                   <span className="flex-1 text-sm font-medium text-neutral-900">{colega.nome}</span>
-                  {selecionado && <span className="text-lg text-emerald-600">✓</span>}
+                  {selecionado && <span className="text-lg text-brand-600">✓</span>}
                 </button>
               </li>
             )
@@ -157,7 +157,7 @@ export default function JogadorAvaliar() {
         type="button"
         onClick={votar}
         disabled={enviando || colegas.length === 0 || !escolha || !mudouEscolha}
-        className="w-full rounded-md bg-emerald-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-50 sm:w-auto"
+        className="w-full rounded-md bg-brand-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-50 sm:w-auto"
       >
         {enviando ? 'Enviando...' : votoAtual ? 'Atualizar voto' : 'Confirmar voto'}
       </button>

@@ -97,7 +97,7 @@ export default function JogadorResultado() {
   }
 
   function destaque(id) {
-    return id === meuTimeId ? 'font-semibold text-emerald-700' : ''
+    return id === meuTimeId ? 'font-semibold text-brand-700' : ''
   }
 
   return (
@@ -141,7 +141,7 @@ export default function JogadorResultado() {
                   {contarGols(p, p.time_a_id)} × {contarGols(p, p.time_b_id)}{' '}
                   <span className={destaque(p.time_b_id)}>{nomeTime(p.time_b_id)}</span>
                 </span>
-                <span className="font-medium text-emerald-700">🏆 {nomeTime(p.time_vencedor_id)}</span>
+                <span className="font-medium text-brand-700">🏆 {nomeTime(p.time_vencedor_id)}</span>
               </li>
             ))}
           </ul>

@@ -167,7 +167,7 @@ export default function AdminJogadores() {
             required
             value={form.nome}
             onChange={(e) => setForm({ ...form, nome: e.target.value })}
-            className="rounded-md border border-neutral-300 px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+            className="rounded-md border border-neutral-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
             placeholder="Ex: João Silva"
           />
         </label>
@@ -208,7 +208,7 @@ export default function AdminJogadores() {
           <select
             value={form.posicao}
             onChange={(e) => setForm({ ...form, posicao: e.target.value })}
-            className="rounded-md border border-neutral-300 px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+            className="rounded-md border border-neutral-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
           >
             <option value="">Selecione</option>
             {POSICOES.map((p) => (
@@ -224,7 +224,7 @@ export default function AdminJogadores() {
           <select
             value={form.nivel}
             onChange={(e) => setForm({ ...form, nivel: e.target.value })}
-            className="rounded-md border border-neutral-300 px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+            className="rounded-md border border-neutral-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
           >
             <option value="">Selecione</option>
             {[1, 2, 3, 4, 5].map((n) => (
@@ -239,7 +239,7 @@ export default function AdminJogadores() {
           <button
             type="submit"
             disabled={salvando || enviandoFoto}
-            className="rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-50"
+            className="rounded-md bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-50"
           >
             {salvando ? 'Salvando...' : editando ? 'Salvar alterações' : 'Adicionar jogador'}
           </button>

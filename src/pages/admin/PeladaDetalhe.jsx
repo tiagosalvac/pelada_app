@@ -12,7 +12,7 @@ const STATUS_LABEL = {
 }
 
 const STATUS_CLASSE = {
-  em_andamento: 'bg-emerald-50 text-emerald-700',
+  em_andamento: 'bg-brand-50 text-brand-700',
   finalizada: 'bg-neutral-100 text-neutral-500',
 }
 
@@ -500,7 +500,7 @@ export default function AdminPeladaDetalhe() {
     return (
       <div className="space-y-4">
         <p className="text-sm text-red-700">{erro ?? 'Pelada não encontrada.'}</p>
-        <Link to="/admin/peladas" className="text-sm text-emerald-700 hover:underline">
+        <Link to="/admin/peladas" className="text-sm text-brand-700 hover:underline">
           ← Voltar pra peladas
         </Link>
       </div>
@@ -542,7 +542,7 @@ export default function AdminPeladaDetalhe() {
       {todosJogadores.length === 0 ? (
         <p className="text-sm text-neutral-400">
           Nenhum jogador cadastrado ainda.{' '}
-          <Link to="/admin/jogadores" className="text-emerald-700 hover:underline">
+          <Link to="/admin/jogadores" className="text-brand-700 hover:underline">
             Cadastre jogadores
           </Link>{' '}
           antes de montar os times.
@@ -559,7 +559,7 @@ export default function AdminPeladaDetalhe() {
                 value={numTimes}
                 onChange={(e) => setNumTimes(Number(e.target.value))}
                 disabled={timesTravados}
-                className="w-16 rounded-md border border-neutral-300 px-2 py-1.5 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 disabled:opacity-50"
+                className="w-16 rounded-md border border-neutral-300 px-2 py-1.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 disabled:opacity-50"
               />
             </label>
             <button
@@ -580,7 +580,7 @@ export default function AdminPeladaDetalhe() {
                 type="button"
                 onClick={sortearNovamente}
                 disabled={processando || timesTravados}
-                className="rounded-md bg-emerald-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-50"
+                className="rounded-md bg-brand-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-50"
               >
                 🔀 Sortear novamente
               </button>
@@ -610,7 +610,7 @@ export default function AdminPeladaDetalhe() {
                   value=""
                   onChange={(e) => convocarJogador(e.target.value)}
                   disabled={processando}
-                  className="mb-2 w-full rounded-md border border-neutral-300 px-2 py-1.5 text-xs text-neutral-600 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                  className="mb-2 w-full rounded-md border border-neutral-300 px-2 py-1.5 text-xs text-neutral-600 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                 >
                   <option value="">+ Convocar jogador...</option>
                   {naoConvocados.map((jogador) => (
@@ -735,14 +735,14 @@ export default function AdminPeladaDetalhe() {
                           <button
                             type="button"
                             onClick={() => encerrarPartida(partidaAtual.time_a_id)}
-                            className="rounded-md bg-emerald-600 px-3 py-1.5 font-medium text-white hover:bg-emerald-700"
+                            className="rounded-md bg-brand-600 px-3 py-1.5 font-medium text-white hover:bg-brand-700"
                           >
                             🏆 {timesPorId.get(partidaAtual.time_a_id)?.nome}
                           </button>
                           <button
                             type="button"
                             onClick={() => encerrarPartida(partidaAtual.time_b_id)}
-                            className="rounded-md bg-emerald-600 px-3 py-1.5 font-medium text-white hover:bg-emerald-700"
+                            className="rounded-md bg-brand-600 px-3 py-1.5 font-medium text-white hover:bg-brand-700"
                           >
                             🏆 {timesPorId.get(partidaAtual.time_b_id)?.nome}
                           </button>
@@ -772,7 +772,7 @@ export default function AdminPeladaDetalhe() {
                       type="button"
                       onClick={comecarJogo}
                       disabled={processando}
-                      className="rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-50"
+                      className="rounded-md bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-50"
                     >
                       {partidas.length === 0 ? '▶️ Começar jogo' : '🔁 Novo confronto'}
                     </button>
@@ -790,7 +790,7 @@ export default function AdminPeladaDetalhe() {
                           {timesPorId.get(p.time_a_id)?.nome ?? '?'} {contarGols(p, p.time_a_id)} ×{' '}
                           {contarGols(p, p.time_b_id)} {timesPorId.get(p.time_b_id)?.nome ?? '?'}
                         </span>
-                        <span className="font-medium text-emerald-700">
+                        <span className="font-medium text-brand-700">
                           🏆 {timesPorId.get(p.time_vencedor_id)?.nome ?? '?'}
                         </span>
                       </li>
@@ -830,7 +830,7 @@ export default function AdminPeladaDetalhe() {
                   <button
                     type="button"
                     onClick={copiarMensagem}
-                    className="rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700"
+                    className="rounded-md bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700"
                   >
                     {copiado ? 'Copiado ✓' : '📋 Copiar mensagem'}
                   </button>
@@ -904,7 +904,7 @@ function JogadorPartidaLinha({ jogador, gols, onMais, onMenos, disabled }) {
           type="button"
           onClick={onMais}
           disabled={disabled}
-          className="h-6 w-6 rounded-md border border-emerald-300 text-sm text-emerald-700 hover:bg-emerald-50 disabled:opacity-30"
+          className="h-6 w-6 rounded-md border border-brand-300 text-sm text-brand-700 hover:bg-brand-50 disabled:opacity-30"
         >
           +
         </button>
