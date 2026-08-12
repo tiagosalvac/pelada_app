@@ -25,6 +25,12 @@ function formatarData(iso) {
   return new Date(iso).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })
 }
 
+/** "Fulano", "Fulano e Ciclano" ou "Fulano, Ciclano e Beltrano". */
+function formatarLista(nomes) {
+  if (nomes.length <= 1) return nomes.join('')
+  return `${nomes.slice(0, -1).join(', ')} e ${nomes[nomes.length - 1]}`
+}
+
 function embaralhar(lista) {
   const copia = [...lista]
   for (let i = copia.length - 1; i > 0; i--) {
@@ -181,12 +187,39 @@ export default function AdminPeladaDetalhe() {
     () => calcularArtilheirosDaPelada(partidas.flatMap((p) => p.gols)),
     [partidas],
   )
+  // Time com mais vitórias na pelada. Só existe um "campeão" se não tiver empate — em caso
+  // de empate no número de vitórias, a mensagem simplesmente não menciona essa parte.
+  const timeMaisVitorias = useMemo(() => {
+    if (partidasFinalizadas.length === 0) return null
+
+    const vitoriasPorTime = new Map(times.map((t) => [t.id, 0]))
+    for (const p of partidasFinalizadas) {
+      if (vitoriasPorTime.has(p.time_vencedor_id)) {
+        vitoriasPorTime.set(p.time_vencedor_id, vitoriasPorTime.get(p.time_vencedor_id) + 1)
+      }
+    }
+
+    const maxVitorias = Math.max(...vitoriasPorTime.values())
+    if (maxVitorias === 0) return null
+
+    const campeoes = times.filter((t) => vitoriasPorTime.get(t.id) === maxVitorias)
+    return campeoes.length === 1 ? campeoes[0] : null
+  }, [times, partidasFinalizadas])
+
   const mensagemMvp = useMemo(() => {
     if (!pelada || podioMvp.length === 0) return ''
 
     const emojiPosicao = ['🥇 MVP', '🥈 2º lugar', '🥉 3º lugar']
-    const linhas = [`📋 Resultado da pelada – ${formatarData(pelada.data)}`, '']
+    const linhas = [`📋 Resultado da pelada – ${formatarData(pelada.data)}`]
 
+    if (timeMaisVitorias) {
+      linhas.push('')
+      linhas.push(
+        `🏆 Time campeão: ${timeMaisVitorias.nome} (${formatarLista(timeMaisVitorias.jogadores.map((j) => j.nome))})`,
+      )
+    }
+
+    linhas.push('')
     podioMvp.forEach((degrau, i) => {
       const nomes = degrau.jogadorIds.map((id) => jogadoresPorId.get(id)?.nome ?? '?').join(' e ')
       linhas.push(`${emojiPosicao[i]}: ${nomes} (${degrau.votos} voto${degrau.votos === 1 ? '' : 's'})`)
@@ -199,7 +232,7 @@ export default function AdminPeladaDetalhe() {
     }
 
     return linhas.join('\n')
-  }, [pelada, podioMvp, artilheirosDaPelada, jogadoresPorId])
+  }, [pelada, podioMvp, artilheirosDaPelada, jogadoresPorId, timeMaisVitorias])
 
   const mensagemTimes = useMemo(() => {
     if (!pelada || times.length === 0) return ''
