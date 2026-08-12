@@ -50,7 +50,7 @@ export default function JogadorEstatisticas() {
       {carregando ? (
         <p className="text-sm text-neutral-400">Carregando...</p>
       ) : (
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-3 gap-2 sm:gap-4">
           <StatTile emoji="⚽" label="Gols" valor={gols?.total_gols ?? 0} />
           <StatTile emoji="🏆" label="Vitórias" valor={vitorias?.total_vitorias ?? 0} />
           <StatTile emoji="🌟" label="Votos de MVP" valor={mvps?.total_votos_mvp ?? 0} />

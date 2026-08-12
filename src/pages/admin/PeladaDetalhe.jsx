@@ -63,7 +63,8 @@ export default function AdminPeladaDetalhe() {
   const [processando, setProcessando] = useState(false)
   const [erro, setErro] = useState(null)
   const [numTimes, setNumTimes] = useState(NUM_TIMES_PADRAO)
-  const [arrastandoId, setArrastandoId] = useState(null)
+  // id do jogador com o "mover pra..." aberto (toque em vez de arrastar — funciona no celular)
+  const [jogadorEmMovimento, setJogadorEmMovimento] = useState(null)
   const [mostrarEscolhaVencedor, setMostrarEscolhaVencedor] = useState(false)
   const [copiado, setCopiado] = useState(false)
 
@@ -337,12 +338,25 @@ export default function AdminPeladaDetalhe() {
     setProcessando(false)
   }
 
-  function onDropZona(event, destinoTimeId) {
-    event.preventDefault()
-    if (timesTravados) return
-    const jogadorId = event.dataTransfer.getData('text/plain')
-    setArrastandoId(null)
-    if (jogadorId) moverJogador(jogadorId, destinoTimeId)
+  /** Toca no jogador pra abrir/fechar as opções de "mover pra...". */
+  function alternarMovimento(jogadorId) {
+    if (timesTravados || processando) return
+    setJogadorEmMovimento((atual) => (atual === jogadorId ? null : jogadorId))
+  }
+
+  async function moverPara(jogadorId, destinoTimeId) {
+    setJogadorEmMovimento(null)
+    await moverJogador(jogadorId, destinoTimeId)
+  }
+
+  /** Pra quem já tá em `timeAtualId` (null = Disponíveis), quais os destinos possíveis. */
+  function destinosDisponiveis(timeAtualId) {
+    const opcoes = []
+    if (timeAtualId !== null) opcoes.push({ id: null, nome: 'Disponíveis' })
+    for (const t of times) {
+      if (t.id !== timeAtualId) opcoes.push({ id: t.id, nome: t.nome })
+    }
+    return opcoes
   }
 
   /** Quem entra em seguida: de quem tá esperando, prioriza quem faz mais tempo que não joga. */
@@ -549,38 +563,40 @@ export default function AdminPeladaDetalhe() {
         </p>
       ) : (
         <>
-          <div className="flex flex-wrap items-center gap-3 rounded-lg border border-neutral-200 bg-white p-4">
-            <label className="flex items-center gap-2 text-sm">
-              <span className="font-medium text-neutral-700">Número de times</span>
-              <input
-                type="number"
-                min={NUM_TIMES_MIN}
-                max={NUM_TIMES_MAX}
-                value={numTimes}
-                onChange={(e) => setNumTimes(Number(e.target.value))}
-                disabled={timesTravados}
-                className="w-16 rounded-md border border-neutral-300 px-2 py-1.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 disabled:opacity-50"
-              />
-            </label>
-            <button
-              type="button"
-              onClick={aplicarNumTimes}
-              disabled={processando || numTimes === times.length || timesTravados}
-              className="rounded-md bg-neutral-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-neutral-800 disabled:opacity-50"
-            >
-              Aplicar
-            </button>
+          <div className="flex flex-col gap-3 rounded-lg border border-neutral-200 bg-white p-4 sm:flex-row sm:flex-wrap sm:items-center">
+            <div className="flex items-center gap-2">
+              <label className="flex items-center gap-2 text-sm">
+                <span className="font-medium text-neutral-700">Nº de times</span>
+                <input
+                  type="number"
+                  min={NUM_TIMES_MIN}
+                  max={NUM_TIMES_MAX}
+                  value={numTimes}
+                  onChange={(e) => setNumTimes(Number(e.target.value))}
+                  disabled={timesTravados}
+                  className="w-16 rounded-md border border-neutral-300 px-2 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 disabled:opacity-50"
+                />
+              </label>
+              <button
+                type="button"
+                onClick={aplicarNumTimes}
+                disabled={processando || numTimes === times.length || timesTravados}
+                className="rounded-md bg-neutral-900 px-3 py-2 text-sm font-medium text-white hover:bg-neutral-800 disabled:opacity-50"
+              >
+                Aplicar
+              </button>
+            </div>
 
             {timesTravados && (
               <span className="text-xs text-amber-600">🔒 Times travados — já tem partida registrada.</span>
             )}
 
-            <div className="ml-auto flex gap-2">
+            <div className="flex gap-2 sm:ml-auto">
               <button
                 type="button"
                 onClick={sortearNovamente}
                 disabled={processando || timesTravados}
-                className="rounded-md bg-brand-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-50"
+                className="flex-1 rounded-md bg-brand-600 px-3 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-50 sm:flex-none"
               >
                 🔀 Sortear novamente
               </button>
@@ -588,19 +604,21 @@ export default function AdminPeladaDetalhe() {
                 type="button"
                 onClick={limparTimes}
                 disabled={processando || timesTravados}
-                className="rounded-md px-3 py-1.5 text-sm font-medium text-neutral-500 hover:bg-neutral-100 disabled:opacity-50"
+                className="flex-1 rounded-md px-3 py-2 text-sm font-medium text-neutral-500 hover:bg-neutral-100 disabled:opacity-50 sm:flex-none"
               >
                 Limpar
               </button>
             </div>
           </div>
 
-          <div className={`grid gap-4 lg:grid-cols-[240px_1fr] ${processando ? 'opacity-60' : ''}`}>
-            <div
-              onDragOver={(e) => e.preventDefault()}
-              onDrop={(e) => onDropZona(e, null)}
-              className="rounded-lg border border-dashed border-neutral-300 bg-white p-3"
-            >
+          {!timesTravados && (
+            <p className="text-xs text-neutral-400">
+              👆 Toque num jogador pra ver os times e mandar ele pra outro.
+            </p>
+          )}
+
+          <div className={`grid gap-4 lg:grid-cols-[260px_1fr] ${processando ? 'opacity-60' : ''}`}>
+            <div className="rounded-lg border border-dashed border-neutral-300 bg-white p-3">
               <h2 className="mb-2 text-sm font-semibold text-neutral-900">
                 Disponíveis ({disponiveis.length})
               </h2>
@@ -610,7 +628,7 @@ export default function AdminPeladaDetalhe() {
                   value=""
                   onChange={(e) => convocarJogador(e.target.value)}
                   disabled={processando}
-                  className="mb-2 w-full rounded-md border border-neutral-300 px-2 py-1.5 text-xs text-neutral-600 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                  className="mb-2 w-full rounded-md border border-neutral-300 px-2 py-2 text-xs text-neutral-600 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                 >
                   <option value="">+ Convocar jogador...</option>
                   {naoConvocados.map((jogador) => (
@@ -626,10 +644,11 @@ export default function AdminPeladaDetalhe() {
                   <JogadorCard
                     key={jogador.id}
                     jogador={jogador}
-                    arrastavel={!timesTravados}
-                    arrastando={arrastandoId === jogador.id}
-                    onDragStart={setArrastandoId}
-                    onDragEnd={() => setArrastandoId(null)}
+                    bloqueado={timesTravados}
+                    expandido={jogadorEmMovimento === jogador.id}
+                    onToggle={() => alternarMovimento(jogador.id)}
+                    destinos={destinosDisponiveis(null)}
+                    onMoverPara={(destinoId) => moverPara(jogador.id, destinoId)}
                     onRemover={() => desconvocarJogador(jogador.id)}
                   />
                 ))}
@@ -643,19 +662,11 @@ export default function AdminPeladaDetalhe() {
               </div>
             </div>
 
-            <div
-              className="grid gap-4"
-              style={{ gridTemplateColumns: `repeat(${Math.max(times.length, 1)}, minmax(0, 1fr))` }}
-            >
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
               {times.map((time) => {
                 const soma = time.jogadores.reduce((acc, j) => acc + (j.nivel ?? NIVEL_PADRAO), 0)
                 return (
-                  <div
-                    key={time.id}
-                    onDragOver={(e) => e.preventDefault()}
-                    onDrop={(e) => onDropZona(e, time.id)}
-                    className="rounded-lg border border-neutral-200 bg-white p-3"
-                  >
+                  <div key={time.id} className="rounded-lg border border-neutral-200 bg-white p-3">
                     <div className="mb-2 flex items-center justify-between">
                       <h2 className="text-sm font-semibold text-neutral-900">{time.nome}</h2>
                       <span className="text-xs text-neutral-400">
@@ -667,12 +678,16 @@ export default function AdminPeladaDetalhe() {
                         <JogadorCard
                           key={jogador.id}
                           jogador={jogador}
-                          arrastavel={!timesTravados}
-                          arrastando={arrastandoId === jogador.id}
-                          onDragStart={setArrastandoId}
-                          onDragEnd={() => setArrastandoId(null)}
+                          bloqueado={timesTravados}
+                          expandido={jogadorEmMovimento === jogador.id}
+                          onToggle={() => alternarMovimento(jogador.id)}
+                          destinos={destinosDisponiveis(time.id)}
+                          onMoverPara={(destinoId) => moverPara(jogador.id, destinoId)}
                         />
                       ))}
+                      {time.jogadores.length === 0 && (
+                        <p className="text-xs text-neutral-400">Sem jogadores. Toque alguém pra colocar aqui.</p>
+                      )}
                     </div>
                   </div>
                 )
@@ -844,37 +859,72 @@ export default function AdminPeladaDetalhe() {
   )
 }
 
-function JogadorCard({ jogador, arrastavel = true, arrastando, onDragStart, onDragEnd, onRemover }) {
+/**
+ * Card de jogador na montagem de times. Em vez de arrastar (não dá pra arrastar
+ * no celular), toca no card pra abrir um leque de times e escolher pra onde mandar.
+ */
+function JogadorCard({ jogador, bloqueado, expandido, onToggle, destinos, onMoverPara, onRemover }) {
   const sigla = siglaPosicao(jogador.posicao)
 
   return (
     <div
-      draggable={arrastavel}
-      onDragStart={(e) => {
-        e.dataTransfer.setData('text/plain', jogador.id)
-        onDragStart(jogador.id)
-      }}
-      onDragEnd={onDragEnd}
-      className={`flex items-center gap-2 rounded-md border border-neutral-200 bg-neutral-50 px-2 py-1.5 ${
-        arrastavel ? 'cursor-grab active:cursor-grabbing' : ''
-      } ${arrastando ? 'opacity-40' : ''}`}
+      className={`rounded-md border bg-neutral-50 ${
+        expandido ? 'border-brand-400 ring-1 ring-brand-400' : 'border-neutral-200'
+      }`}
     >
-      <JogadorAvatar jogador={jogador} className="h-7 w-7 text-xs" />
-      <div className="min-w-0 flex-1">
-        <p className="truncate text-sm text-neutral-900">{jogador.nome}</p>
-        <p className="text-xs text-neutral-400">
-          {sigla ?? '—'} · Nv {jogador.nivel ?? '-'}
-        </p>
+      <div
+        role={bloqueado ? undefined : 'button'}
+        tabIndex={bloqueado ? undefined : 0}
+        onClick={bloqueado ? undefined : onToggle}
+        onKeyDown={(e) => {
+          if (!bloqueado && (e.key === 'Enter' || e.key === ' ')) {
+            e.preventDefault()
+            onToggle()
+          }
+        }}
+        className={`flex items-center gap-2 px-2 py-2 ${bloqueado ? '' : 'cursor-pointer active:bg-neutral-100'}`}
+      >
+        <JogadorAvatar jogador={jogador} className="h-8 w-8 shrink-0 text-xs" />
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-sm text-neutral-900">{jogador.nome}</p>
+          <p className="text-xs text-neutral-400">
+            {sigla ?? '—'} · Nv {jogador.nivel ?? '-'}
+          </p>
+        </div>
+        {!bloqueado && (
+          <span className={`shrink-0 text-xs font-medium ${expandido ? 'text-brand-600' : 'text-neutral-300'}`}>
+            {expandido ? 'fechar ▲' : 'mover ⇄'}
+          </span>
+        )}
+        {onRemover && (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation()
+              onRemover()
+            }}
+            title="Remover da pelada"
+            className="-my-2 -mr-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-md text-neutral-300 hover:bg-red-50 hover:text-red-600"
+          >
+            ×
+          </button>
+        )}
       </div>
-      {onRemover && (
-        <button
-          type="button"
-          onClick={onRemover}
-          title="Remover da pelada"
-          className="shrink-0 px-1 text-neutral-300 hover:text-red-600"
-        >
-          ×
-        </button>
+
+      {expandido && (
+        <div className="flex flex-wrap gap-1.5 border-t border-brand-100 px-2 py-2">
+          <span className="w-full text-xs text-neutral-400">Mover pra:</span>
+          {destinos.map((destino) => (
+            <button
+              key={destino.id ?? 'disponiveis'}
+              type="button"
+              onClick={() => onMoverPara(destino.id)}
+              className="rounded-full bg-brand-600 px-3 py-2 text-xs font-medium text-white hover:bg-brand-700"
+            >
+              {destino.nome}
+            </button>
+          ))}
+        </div>
       )}
     </div>
   )
@@ -890,12 +940,12 @@ function JogadorPartidaLinha({ jogador, gols, onMais, onMenos, disabled }) {
         <p className="truncate text-sm text-neutral-900">{jogador.nome}</p>
         <p className="text-xs text-neutral-400">{sigla ?? '—'}</p>
       </div>
-      <div className="flex items-center gap-1.5">
+      <div className="flex items-center gap-2">
         <button
           type="button"
           onClick={onMenos}
           disabled={disabled || gols === 0}
-          className="h-6 w-6 rounded-md border border-neutral-300 text-sm text-neutral-500 hover:bg-neutral-100 disabled:opacity-30"
+          className="flex h-9 w-9 items-center justify-center rounded-md border border-neutral-300 text-base text-neutral-500 hover:bg-neutral-100 disabled:opacity-30"
         >
           −
         </button>
@@ -904,7 +954,7 @@ function JogadorPartidaLinha({ jogador, gols, onMais, onMenos, disabled }) {
           type="button"
           onClick={onMais}
           disabled={disabled}
-          className="h-6 w-6 rounded-md border border-brand-300 text-sm text-brand-700 hover:bg-brand-50 disabled:opacity-30"
+          className="flex h-9 w-9 items-center justify-center rounded-md border border-brand-300 text-base text-brand-700 hover:bg-brand-50 disabled:opacity-30"
         >
           +
         </button>
