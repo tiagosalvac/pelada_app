@@ -67,6 +67,10 @@ export default function AdminPeladaDetalhe() {
   const [jogadorEmMovimento, setJogadorEmMovimento] = useState(null)
   const [mostrarEscolhaVencedor, setMostrarEscolhaVencedor] = useState(false)
   const [copiado, setCopiado] = useState(false)
+  const [copiadoTimes, setCopiadoTimes] = useState(false)
+  // Escolha manual de quem começa jogando (só vale pro primeiro confronto da pelada).
+  const [timeAEscolhidoId, setTimeAEscolhidoId] = useState(null)
+  const [timeBEscolhidoId, setTimeBEscolhidoId] = useState(null)
 
   // Evita duas fontes de corrida: o efeito de inicialização rodando duas vezes
   // (StrictMode, em dev) e respostas de carregar() chegando fora de ordem.
@@ -196,6 +200,28 @@ export default function AdminPeladaDetalhe() {
 
     return linhas.join('\n')
   }, [pelada, podioMvp, artilheirosDaPelada, jogadoresPorId])
+
+  const mensagemTimes = useMemo(() => {
+    if (!pelada || times.length === 0) return ''
+
+    const linhas = [`⚽ Times de hoje – ${formatarData(pelada.data)}`]
+    for (const time of times) {
+      linhas.push('', `*${time.nome}*`)
+      if (time.jogadores.length === 0) {
+        linhas.push('(sem jogadores)')
+      } else {
+        for (const jogador of time.jogadores) linhas.push(`- ${jogador.nome}`)
+      }
+    }
+
+    return linhas.join('\n')
+  }, [pelada, times])
+
+  // Time A/B pra abrir o primeiro confronto — o admin escolhe; se não escolher, cai nos dois primeiros times.
+  const timeAId = timeAEscolhidoId ?? times[0]?.id ?? ''
+  const opcoesTimeB = times.filter((t) => t.id !== timeAId)
+  const timeBId =
+    timeBEscolhidoId && timeBEscolhidoId !== timeAId ? timeBEscolhidoId : (opcoesTimeB[0]?.id ?? '')
 
   const peladaFinalizada = pelada?.status === 'finalizada'
   // Uma vez que tem partida registrada, trava a montagem de times: mexer nos times
@@ -380,18 +406,20 @@ export default function AdminPeladaDetalhe() {
     })[0]
   }
 
-  async function comecarJogo() {
-    if (times.length < 2) return
+  async function comecarJogo(timeAId, timeBId) {
+    if (!timeAId || !timeBId || timeAId === timeBId) return
     setProcessando(true)
     setErro(null)
 
     const { error } = await supabase.from('partidas').insert({
       pelada_id: peladaId,
-      time_a_id: times[0].id,
-      time_b_id: times[1].id,
+      time_a_id: timeAId,
+      time_b_id: timeBId,
     })
     if (error) setErro('Não foi possível começar o jogo.')
 
+    setTimeAEscolhidoId(null)
+    setTimeBEscolhidoId(null)
     await carregar()
     setProcessando(false)
   }
@@ -501,6 +529,16 @@ export default function AdminPeladaDetalhe() {
       await navigator.clipboard.writeText(mensagemMvp)
       setCopiado(true)
       setTimeout(() => setCopiado(false), 2000)
+    } catch {
+      setErro('Não foi possível copiar. Copia manualmente o texto acima.')
+    }
+  }
+
+  async function copiarMensagemTimes() {
+    try {
+      await navigator.clipboard.writeText(mensagemTimes)
+      setCopiadoTimes(true)
+      setTimeout(() => setCopiadoTimes(false), 2000)
     } catch {
       setErro('Não foi possível copiar. Copia manualmente o texto acima.')
     }
@@ -695,6 +733,19 @@ export default function AdminPeladaDetalhe() {
             </div>
           </div>
 
+          {times.some((t) => t.jogadores.length > 0) && (
+            <div className="flex flex-wrap items-center gap-3 rounded-lg border border-neutral-200 bg-white p-4">
+              <p className="text-sm text-neutral-500">Times prontos? Manda pro grupo do WhatsApp.</p>
+              <button
+                type="button"
+                onClick={copiarMensagemTimes}
+                className="ml-auto rounded-md bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700"
+              >
+                {copiadoTimes ? 'Copiado ✓' : '📋 Copiar times pro WhatsApp'}
+              </button>
+            </div>
+          )}
+
           {times.length >= 2 && (
             <div className="space-y-4">
               <h2 className="text-sm font-semibold text-neutral-900">Partidas</h2>
@@ -774,22 +825,71 @@ export default function AdminPeladaDetalhe() {
                       )}
                     </div>
                   </div>
+                ) : partidas.length === 0 ? (
+                  <div className="rounded-lg border border-dashed border-neutral-300 bg-white p-4">
+                    <p className="mb-3 text-sm font-medium text-neutral-700">Quem começa jogando?</p>
+                    <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
+                      <label className="flex-1 text-sm">
+                        <span className="mb-1 block text-xs text-neutral-500">Time</span>
+                        <select
+                          value={timeAId}
+                          onChange={(e) => {
+                            setTimeAEscolhidoId(e.target.value)
+                            if (e.target.value === timeBId) setTimeBEscolhidoId(null)
+                          }}
+                          className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                        >
+                          {times.map((t) => (
+                            <option key={t.id} value={t.id}>
+                              {t.nome}
+                            </option>
+                          ))}
+                        </select>
+                      </label>
+                      <span className="pb-2 text-center text-sm text-neutral-400">×</span>
+                      <label className="flex-1 text-sm">
+                        <span className="mb-1 block text-xs text-neutral-500">Contra</span>
+                        <select
+                          value={timeBId}
+                          onChange={(e) => setTimeBEscolhidoId(e.target.value)}
+                          className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                        >
+                          {opcoesTimeB.map((t) => (
+                            <option key={t.id} value={t.id}>
+                              {t.nome}
+                            </option>
+                          ))}
+                        </select>
+                      </label>
+                      <button
+                        type="button"
+                        onClick={() => comecarJogo(timeAId, timeBId)}
+                        disabled={processando || !timeAId || !timeBId}
+                        className="rounded-md bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-50"
+                      >
+                        ▶️ Começar jogo
+                      </button>
+                    </div>
+                    {times.length > 2 && (
+                      <p className="mt-3 text-xs text-neutral-400">
+                        Esperando:{' '}
+                        {times
+                          .filter((t) => t.id !== timeAId && t.id !== timeBId)
+                          .map((t) => t.nome)
+                          .join(', ')}
+                      </p>
+                    )}
+                  </div>
                 ) : (
                   <div className="rounded-lg border border-dashed border-neutral-300 bg-white p-4 text-center">
-                    <p className="mb-3 text-sm text-neutral-500">
-                      {partidas.length === 0
-                        ? `Pronto pra começar: ${times[0]?.nome} × ${times[1]?.nome}${
-                            times.length > 2 ? ` (${times.slice(2).map((t) => t.nome).join(', ')} espera)` : ''
-                          }.`
-                        : 'Ninguém esperando pra jogar. Pode recomeçar se quiser.'}
-                    </p>
+                    <p className="mb-3 text-sm text-neutral-500">Ninguém esperando pra jogar. Pode recomeçar se quiser.</p>
                     <button
                       type="button"
-                      onClick={comecarJogo}
+                      onClick={() => comecarJogo(times[0]?.id, times[1]?.id)}
                       disabled={processando}
                       className="rounded-md bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-50"
                     >
-                      {partidas.length === 0 ? '▶️ Começar jogo' : '🔁 Novo confronto'}
+                      🔁 Novo confronto
                     </button>
                   </div>
                 ))}
