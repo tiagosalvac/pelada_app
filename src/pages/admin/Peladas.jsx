@@ -10,8 +10,8 @@ const STATUS_LABEL = {
 }
 
 const STATUS_CLASSE = {
-  em_andamento: 'bg-brand-50 text-brand-700',
-  finalizada: 'bg-neutral-100 text-neutral-500',
+  em_andamento: 'bg-amarelo-500 text-azul-900',
+  finalizada: 'bg-azul-600 text-azul-100',
 }
 
 function dataParaInput(date) {
@@ -132,77 +132,77 @@ export default function AdminPeladas() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-xl font-semibold text-neutral-900">Peladas</h1>
-        <p className="mt-1 text-sm text-neutral-500">
+        <h1 className="text-xl font-semibold text-white">Peladas</h1>
+        <p className="mt-1 text-sm text-texto-secundario">
           Crie uma pelada, escolha quem vai jogar e monte os times.
         </p>
       </div>
 
       {erro && (
-        <div className="rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+        <div className="rounded-md border border-perigo/40 bg-perigo/10 px-4 py-3 text-sm text-perigo">
           {erro}
         </div>
       )}
 
       <form
         onSubmit={criarPelada}
-        className="space-y-4 rounded-lg border border-neutral-200 bg-white p-5"
+        className="space-y-4 rounded-lg border border-amarelo-500/25 bg-azul-700 p-5"
       >
         <label className="flex w-fit flex-col gap-1 text-sm">
-          <span className="font-medium text-neutral-700">Data e horário</span>
+          <span className="font-medium text-white/90">Data e horário</span>
           <input
             type="datetime-local"
             required
             value={dataForm}
             onChange={(e) => setDataForm(e.target.value)}
-            className="rounded-md border border-neutral-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+            className="rounded-md border border-borda-input bg-azul-700 px-3 py-2 text-sm text-white focus:border-amarelo-500 focus:outline-none focus:ring-2 focus:ring-amarelo-500"
           />
         </label>
 
         <div>
           <div className="mb-2 flex items-center justify-between">
-            <span className="text-sm font-medium text-neutral-700">
+            <span className="text-sm font-medium text-white/90">
               Quem vai jogar? {selecionados.size > 0 && `(${selecionados.size} selecionado${selecionados.size > 1 ? 's' : ''})`}
             </span>
             <div className="flex gap-3 text-xs">
-              <button type="button" onClick={selecionarTodos} className="text-brand-700 hover:underline">
+              <button type="button" onClick={selecionarTodos} className="text-amarelo-500 hover:underline">
                 Selecionar todos
               </button>
-              <button type="button" onClick={limparSelecao} className="text-neutral-400 hover:underline">
+              <button type="button" onClick={limparSelecao} className="text-texto-secundario hover:underline">
                 Limpar
               </button>
             </div>
           </div>
 
           {jogadores.length === 0 ? (
-            <p className="text-sm text-neutral-400">
+            <p className="text-sm text-texto-secundario">
               Nenhum jogador cadastrado ainda.{' '}
-              <Link to="/admin/jogadores" className="text-brand-700 hover:underline">
+              <Link to="/admin/jogadores" className="text-amarelo-500 hover:underline">
                 Cadastre jogadores
               </Link>{' '}
               antes de criar uma pelada.
             </p>
           ) : (
-            <div className="grid max-h-72 gap-1 overflow-y-auto rounded-md border border-neutral-200 p-2 sm:grid-cols-2">
+            <div className="grid max-h-72 gap-1 overflow-y-auto rounded-md border border-borda-input p-2 sm:grid-cols-2">
               {jogadores.map((jogador) => {
                 const marcado = selecionados.has(jogador.id)
                 return (
                   <label
                     key={jogador.id}
                     className={`flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-sm ${
-                      marcado ? 'bg-brand-50' : 'hover:bg-neutral-50'
+                      marcado ? 'bg-amarelo-500/15' : 'hover:bg-azul-600/40'
                     }`}
                   >
                     <input
                       type="checkbox"
                       checked={marcado}
                       onChange={() => alternarSelecionado(jogador.id)}
-                      className="h-4 w-4 accent-brand-600"
+                      className="h-4 w-4 accent-amarelo-500"
                     />
                     <JogadorAvatar jogador={jogador} className="h-7 w-7 text-xs" />
                     <div className="min-w-0 flex-1">
-                      <p className="truncate text-neutral-900">{jogador.nome}</p>
-                      <p className="text-xs text-neutral-400">
+                      <p className="truncate text-white">{jogador.nome}</p>
+                      <p className="text-xs text-texto-secundario">
                         {siglaPosicao(jogador.posicao) ?? '—'} · Nv {jogador.nivel ?? '-'}
                       </p>
                     </div>
@@ -216,27 +216,30 @@ export default function AdminPeladas() {
         <button
           type="submit"
           disabled={criando}
-          className="rounded-md bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-50"
+          className="rounded-md bg-amarelo-500 px-4 py-2 text-sm font-bold text-azul-900 hover:bg-amarelo-400 disabled:opacity-50"
         >
           {criando ? 'Criando...' : 'Criar pelada'}
         </button>
       </form>
 
       <div>
-        <h2 className="mb-3 text-sm font-semibold text-neutral-900">
+        <h2 className="mb-3 text-sm font-semibold text-white">
           Histórico {!carregando && `(${peladas.length})`}
         </h2>
 
         {carregando ? (
-          <p className="text-sm text-neutral-400">Carregando...</p>
+          <p className="text-sm text-texto-secundario">Carregando...</p>
         ) : peladas.length === 0 ? (
-          <p className="text-sm text-neutral-400">Nenhuma pelada criada ainda.</p>
+          <p className="text-sm text-texto-secundario">Nenhuma pelada criada ainda.</p>
         ) : (
-          <ul className="divide-y divide-neutral-200 rounded-lg border border-neutral-200 bg-white">
-            {peladas.map((pelada) => (
-              <li key={pelada.id} className="flex items-center gap-3 px-4 py-3">
+          <ul className="overflow-hidden rounded-lg border border-amarelo-500/25">
+            {peladas.map((pelada, i) => (
+              <li
+                key={pelada.id}
+                className={`flex items-center gap-3 px-4 py-3 ${i % 2 === 0 ? 'bg-azul-700' : 'bg-azul-900'}`}
+              >
                 <div className="min-w-0 flex-1">
-                  <p className="text-sm font-medium text-neutral-900">{formatarData(pelada.data)}</p>
+                  <p className="text-sm font-medium text-white">{formatarData(pelada.data)}</p>
                   <span
                     className={`mt-1 inline-block rounded-full px-2 py-0.5 text-xs font-medium ${STATUS_CLASSE[pelada.status]}`}
                   >
@@ -246,14 +249,14 @@ export default function AdminPeladas() {
 
                 <Link
                   to={`/admin/peladas/${pelada.id}`}
-                  className="rounded-md px-3 py-1.5 text-sm font-medium text-brand-700 hover:bg-brand-50"
+                  className="rounded-md px-3 py-1.5 text-sm font-medium text-amarelo-500 hover:bg-amarelo-500/10"
                 >
                   Montar times
                 </Link>
                 <button
                   type="button"
                   onClick={() => excluir(pelada)}
-                  className="rounded-md px-3 py-1.5 text-sm font-medium text-red-600 hover:bg-red-50"
+                  className="rounded-md px-3 py-1.5 text-sm font-medium text-perigo hover:bg-perigo/10"
                 >
                   Remover
                 </button>

@@ -99,14 +99,14 @@ export default function JogadorAvaliar() {
   }
 
   if (carregando) {
-    return <p className="text-sm text-neutral-400">Carregando...</p>
+    return <p className="text-sm text-texto-secundario">Carregando...</p>
   }
 
   if (!pelada) {
     return (
       <div className="space-y-2">
-        <p className="text-sm text-neutral-400">Nenhuma votação de MVP aberta pra você no momento.</p>
-        <Link to="/jogador/resultado" className="text-sm text-brand-700 hover:underline">
+        <p className="text-sm text-texto-secundario">Nenhuma votação de MVP aberta pra você no momento.</p>
+        <Link to="/jogador/resultado" className="text-sm text-amarelo-500 hover:underline">
           Ver resultado da última pelada →
         </Link>
       </div>
@@ -118,34 +118,34 @@ export default function JogadorAvaliar() {
   return (
     <div className="space-y-4 pb-6">
       <div>
-        <h1 className="text-xl font-semibold text-neutral-900">Quem foi o MVP?</h1>
-        <p className="mt-1 text-sm text-neutral-500">
+        <h1 className="text-xl font-semibold text-white">Quem foi o MVP?</h1>
+        <p className="mt-1 text-sm text-texto-secundario">
           Pelada de {formatarData(pelada.data)}. Escolhe 1 pessoa — pode trocar até a votação fechar.
         </p>
       </div>
 
       {erro && (
-        <div className="rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{erro}</div>
+        <div className="rounded-md border border-perigo/40 bg-perigo/10 px-4 py-3 text-sm text-perigo">{erro}</div>
       )}
 
       {colegas.length === 0 ? (
-        <p className="text-sm text-neutral-400">Ninguém mais convocado pra essa pelada.</p>
+        <p className="text-sm text-texto-secundario">Ninguém mais convocado pra essa pelada.</p>
       ) : (
-        <ul className="divide-y divide-neutral-200 rounded-lg border border-neutral-200 bg-white">
-          {colegas.map((colega) => {
+        <ul className="overflow-hidden rounded-lg border border-amarelo-500/25">
+          {colegas.map((colega, i) => {
             const selecionado = escolha === colega.id
             return (
-              <li key={colega.id}>
+              <li key={colega.id} className={selecionado ? '' : i % 2 === 0 ? 'bg-azul-700' : 'bg-azul-900'}>
                 <button
                   type="button"
                   onClick={() => setEscolha(colega.id)}
                   className={`flex w-full items-center gap-3 px-4 py-3 text-left transition-colors ${
-                    selecionado ? 'bg-brand-50' : 'hover:bg-neutral-50'
+                    selecionado ? 'bg-amarelo-500/15' : 'hover:bg-azul-600/40'
                   }`}
                 >
                   <JogadorAvatar jogador={colega} />
-                  <span className="flex-1 text-sm font-medium text-neutral-900">{colega.nome}</span>
-                  {selecionado && <span className="text-lg text-brand-600">✓</span>}
+                  <span className="flex-1 text-sm font-medium text-white">{colega.nome}</span>
+                  {selecionado && <span className="text-lg text-amarelo-500">✓</span>}
                 </button>
               </li>
             )
@@ -157,7 +157,7 @@ export default function JogadorAvaliar() {
         type="button"
         onClick={votar}
         disabled={enviando || colegas.length === 0 || !escolha || !mudouEscolha}
-        className="w-full rounded-md bg-brand-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-50 sm:w-auto"
+        className="w-full rounded-md bg-amarelo-500 px-4 py-2.5 text-sm font-bold text-azul-900 hover:bg-amarelo-400 disabled:opacity-50 sm:w-auto"
       >
         {enviando ? 'Enviando...' : votoAtual ? 'Atualizar voto' : 'Confirmar voto'}
       </button>

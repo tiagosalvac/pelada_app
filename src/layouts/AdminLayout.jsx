@@ -1,16 +1,16 @@
 import { NavLink, Outlet } from 'react-router-dom'
 
 const linkClass = ({ isActive }) =>
-  `shrink-0 whitespace-nowrap rounded-md px-2.5 py-1.5 text-xs font-medium transition-colors sm:px-3 sm:py-2 sm:text-sm ${
-    isActive ? 'bg-brand-600 text-white' : 'text-neutral-600 hover:bg-neutral-100'
+  `shrink-0 whitespace-nowrap rounded-md px-2.5 py-1.5 text-xs font-bold transition-colors sm:px-3 sm:py-2 sm:text-sm ${
+    isActive ? 'bg-amarelo-500 text-azul-900' : 'text-texto-secundario hover:bg-azul-700 hover:text-white'
   }`
 
 export default function AdminLayout() {
   return (
-    <div className="min-h-screen bg-neutral-50">
-      <header className="border-b border-neutral-200 bg-white">
+    <div className="min-h-screen bg-azul-900">
+      <header className="border-b-[3px] border-amarelo-500 bg-azul-900">
         <div className="mx-auto flex max-w-4xl items-center gap-2 px-3 py-2.5 sm:px-4 sm:py-3">
-          <span className="flex shrink-0 items-center gap-2 text-sm font-semibold text-neutral-900 sm:text-base">
+          <span className="flex shrink-0 items-center gap-2 text-sm font-semibold text-white sm:text-base">
             <img src="/logo.png" alt="" className="h-8 w-8 shrink-0 rounded-full object-cover" />
             <span className="whitespace-nowrap">
               Pelada da VT <span className="hidden sm:inline">· Admin</span>

@@ -138,49 +138,49 @@ export default function AdminJogadores() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-xl font-semibold text-neutral-900">Jogadores</h1>
-        <p className="mt-1 text-sm text-neutral-500">
+        <h1 className="text-xl font-semibold text-white">Jogadores</h1>
+        <p className="mt-1 text-sm text-texto-secundario">
           Cadastre quem participa da pelada. Esses dados são usados pra montar os times.
         </p>
       </div>
 
       {erro && (
-        <div className="rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+        <div className="rounded-md border border-perigo/40 bg-perigo/10 px-4 py-3 text-sm text-perigo">
           {erro}
         </div>
       )}
 
       <form
         onSubmit={salvar}
-        className="grid gap-4 rounded-lg border border-neutral-200 bg-white p-5 sm:grid-cols-2"
+        className="grid gap-4 rounded-lg border border-amarelo-500/25 bg-azul-700 p-5 sm:grid-cols-2"
       >
         <div className="sm:col-span-2">
-          <h2 className="text-sm font-semibold text-neutral-900">
+          <h2 className="text-sm font-semibold text-white">
             {editando ? 'Editar jogador' : 'Novo jogador'}
           </h2>
         </div>
 
         <label className="flex flex-col gap-1 text-sm">
-          <span className="font-medium text-neutral-700">Nome *</span>
+          <span className="font-medium text-white/90">Nome *</span>
           <input
             type="text"
             required
             value={form.nome}
             onChange={(e) => setForm({ ...form, nome: e.target.value })}
-            className="rounded-md border border-neutral-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+            className="rounded-md border border-borda-input bg-azul-700 px-3 py-2 text-sm text-white placeholder:text-texto-secundario focus:border-amarelo-500 focus:outline-none focus:ring-2 focus:ring-amarelo-500"
             placeholder="Ex: João Silva"
           />
         </label>
 
         <div className="flex flex-col gap-1 text-sm">
-          <span className="font-medium text-neutral-700">Foto</span>
+          <span className="font-medium text-white/90">Foto</span>
           <div className="flex items-center gap-3">
             <JogadorAvatar
               jogador={{ nome: form.nome || '?', foto_url: previewFoto }}
               className="h-14 w-14 text-base"
             />
             <div className="flex flex-col items-start gap-1">
-              <label className="inline-flex cursor-pointer items-center rounded-md border border-neutral-300 px-3 py-1.5 text-sm font-medium text-neutral-700 hover:bg-neutral-50">
+              <label className="inline-flex cursor-pointer items-center rounded-md border border-borda-input px-3 py-1.5 text-sm font-medium text-white/90 hover:bg-azul-600">
                 {enviandoFoto ? 'Enviando...' : form.foto_url ? 'Trocar foto' : 'Escolher foto'}
                 <input
                   type="file"
@@ -194,7 +194,7 @@ export default function AdminJogadores() {
                 <button
                   type="button"
                   onClick={removerFoto}
-                  className="text-xs text-neutral-400 hover:text-red-600"
+                  className="text-xs text-texto-secundario hover:text-perigo"
                 >
                   Remover foto
                 </button>
@@ -204,11 +204,11 @@ export default function AdminJogadores() {
         </div>
 
         <label className="flex flex-col gap-1 text-sm">
-          <span className="font-medium text-neutral-700">Posição</span>
+          <span className="font-medium text-white/90">Posição</span>
           <select
             value={form.posicao}
             onChange={(e) => setForm({ ...form, posicao: e.target.value })}
-            className="rounded-md border border-neutral-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+            className="rounded-md border border-borda-input bg-azul-700 px-3 py-2 text-sm text-white focus:border-amarelo-500 focus:outline-none focus:ring-2 focus:ring-amarelo-500"
           >
             <option value="">Selecione</option>
             {POSICOES.map((p) => (
@@ -220,11 +220,11 @@ export default function AdminJogadores() {
         </label>
 
         <label className="flex flex-col gap-1 text-sm">
-          <span className="font-medium text-neutral-700">Nível (1-5)</span>
+          <span className="font-medium text-white/90">Nível (1-5)</span>
           <select
             value={form.nivel}
             onChange={(e) => setForm({ ...form, nivel: e.target.value })}
-            className="rounded-md border border-neutral-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+            className="rounded-md border border-borda-input bg-azul-700 px-3 py-2 text-sm text-white focus:border-amarelo-500 focus:outline-none focus:ring-2 focus:ring-amarelo-500"
           >
             <option value="">Selecione</option>
             {[1, 2, 3, 4, 5].map((n) => (
@@ -239,7 +239,7 @@ export default function AdminJogadores() {
           <button
             type="submit"
             disabled={salvando || enviandoFoto}
-            className="rounded-md bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-50"
+            className="rounded-md bg-amarelo-500 px-4 py-2 text-sm font-bold text-azul-900 hover:bg-amarelo-400 disabled:opacity-50"
           >
             {salvando ? 'Salvando...' : editando ? 'Salvar alterações' : 'Adicionar jogador'}
           </button>
@@ -247,7 +247,7 @@ export default function AdminJogadores() {
             <button
               type="button"
               onClick={cancelarEdicao}
-              className="rounded-md px-4 py-2 text-sm font-medium text-neutral-500 hover:bg-neutral-100"
+              className="rounded-md border border-amarelo-500 px-4 py-2 text-sm font-medium text-amarelo-500 hover:bg-amarelo-500/10"
             >
               Cancelar
             </button>
@@ -256,23 +256,26 @@ export default function AdminJogadores() {
       </form>
 
       <div>
-        <h2 className="mb-3 text-sm font-semibold text-neutral-900">
+        <h2 className="mb-3 text-sm font-semibold text-white">
           Cadastrados {!carregando && `(${jogadores.length})`}
         </h2>
 
         {carregando ? (
-          <p className="text-sm text-neutral-400">Carregando...</p>
+          <p className="text-sm text-texto-secundario">Carregando...</p>
         ) : jogadores.length === 0 ? (
-          <p className="text-sm text-neutral-400">Nenhum jogador cadastrado ainda.</p>
+          <p className="text-sm text-texto-secundario">Nenhum jogador cadastrado ainda.</p>
         ) : (
-          <ul className="divide-y divide-neutral-200 rounded-lg border border-neutral-200 bg-white">
-            {jogadores.map((jogador) => (
-              <li key={jogador.id} className="flex items-center gap-3 px-4 py-3">
+          <ul className="overflow-hidden rounded-lg border border-amarelo-500/25">
+            {jogadores.map((jogador, i) => (
+              <li
+                key={jogador.id}
+                className={`flex items-center gap-3 px-4 py-3 ${i % 2 === 0 ? 'bg-azul-700' : 'bg-azul-900'}`}
+              >
                 <JogadorAvatar jogador={jogador} />
 
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-medium text-neutral-900">{jogador.nome}</p>
-                  <p className="text-xs text-neutral-400">
+                  <p className="truncate text-sm font-medium text-white">{jogador.nome}</p>
+                  <p className="text-xs text-texto-secundario">
                     {POSICOES.find((p) => p.value === jogador.posicao)?.label ?? 'Sem posição'}
                     {jogador.nivel ? ` · Nível ${jogador.nivel}` : ''}
                   </p>
@@ -281,14 +284,14 @@ export default function AdminJogadores() {
                 <button
                   type="button"
                   onClick={() => iniciarEdicao(jogador)}
-                  className="rounded-md px-3 py-1.5 text-sm font-medium text-neutral-600 hover:bg-neutral-100"
+                  className="rounded-md px-3 py-1.5 text-sm font-medium text-texto-secundario hover:bg-azul-600 hover:text-white"
                 >
                   Editar
                 </button>
                 <button
                   type="button"
                   onClick={() => excluir(jogador)}
-                  className="rounded-md px-3 py-1.5 text-sm font-medium text-red-600 hover:bg-red-50"
+                  className="rounded-md px-3 py-1.5 text-sm font-medium text-perigo hover:bg-perigo/10"
                 >
                   Remover
                 </button>

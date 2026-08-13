@@ -39,16 +39,16 @@ export default function JogadorEstatisticas() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-xl font-semibold text-neutral-900">Suas estatísticas</h1>
-        <p className="mt-1 text-sm text-neutral-500">Somando todas as peladas que você jogou.</p>
+        <h1 className="text-xl font-semibold text-white">Suas estatísticas</h1>
+        <p className="mt-1 text-sm text-texto-secundario">Somando todas as peladas que você jogou.</p>
       </div>
 
       {erro && (
-        <div className="rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{erro}</div>
+        <div className="rounded-md border border-perigo/40 bg-perigo/10 px-4 py-3 text-sm text-perigo">{erro}</div>
       )}
 
       {carregando ? (
-        <p className="text-sm text-neutral-400">Carregando...</p>
+        <p className="text-sm text-texto-secundario">Carregando...</p>
       ) : (
         <div className="grid grid-cols-3 gap-2 sm:gap-4">
           <StatTile emoji="⚽" label="Gols" valor={gols?.total_gols ?? 0} />
@@ -62,11 +62,11 @@ export default function JogadorEstatisticas() {
 
 function StatTile({ emoji, label, valor, sub }) {
   return (
-    <div className="rounded-lg border border-neutral-200 bg-white p-4 text-center">
+    <div className="rounded-lg border border-amarelo-500/25 bg-azul-700 p-4 text-center">
       <p className="text-2xl">{emoji}</p>
-      <p className="mt-1 text-2xl font-bold text-neutral-900">{valor}</p>
-      <p className="text-xs text-neutral-500">{label}</p>
-      {sub && <p className="mt-0.5 text-xs text-neutral-400">{sub}</p>}
+      <p className="mt-1 text-2xl font-bold text-amarelo-500">{valor}</p>
+      <p className="text-xs text-texto-secundario">{label}</p>
+      {sub && <p className="mt-0.5 text-xs text-texto-secundario">{sub}</p>}
     </div>
   )
 }

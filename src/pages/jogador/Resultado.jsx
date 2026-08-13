@@ -74,15 +74,15 @@ export default function JogadorResultado() {
   }
 
   if (carregando) {
-    return <p className="text-sm text-neutral-400">Carregando...</p>
+    return <p className="text-sm text-texto-secundario">Carregando...</p>
   }
 
   if (erro) {
-    return <p className="text-sm text-red-700">{erro}</p>
+    return <p className="text-sm text-perigo">{erro}</p>
   }
 
   if (!pelada) {
-    return <p className="text-sm text-neutral-400">Você ainda não participou de nenhuma pelada.</p>
+    return <p className="text-sm text-texto-secundario">Você ainda não participou de nenhuma pelada.</p>
   }
 
   const timesPorId = new Map(times.map((t) => [t.id, t]))
@@ -97,29 +97,29 @@ export default function JogadorResultado() {
   }
 
   function destaque(id) {
-    return id === meuTimeId ? 'font-semibold text-brand-700' : ''
+    return id === meuTimeId ? 'font-semibold text-amarelo-500' : ''
   }
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-xl font-semibold text-neutral-900">{formatarData(pelada.data)}</h1>
-        <span className="mt-1 inline-block rounded-full bg-neutral-100 px-2 py-0.5 text-xs font-medium text-neutral-500">
+        <h1 className="text-xl font-semibold text-white">{formatarData(pelada.data)}</h1>
+        <span className="mt-1 inline-block rounded-full bg-azul-600 px-2 py-0.5 text-xs font-medium text-azul-100">
           {STATUS_LABEL[pelada.status] ?? pelada.status}
         </span>
       </div>
 
       {campeoes.length > 0 && (
-        <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+        <div className="rounded-lg border border-amarelo-400 bg-amarelo-100 px-4 py-3 text-sm text-azul-900">
           🏆 {campeoes.length === 1 ? 'Campeão do dia' : 'Campeões do dia (empate)'}:{' '}
           <span className="font-semibold">{campeoes.map((t) => t.nome).join(' e ')}</span>
         </div>
       )}
 
       {partidaAtual && (
-        <div className="rounded-lg border border-neutral-200 bg-white p-4">
-          <p className="mb-2 text-center text-xs font-semibold text-neutral-500">Rolando agora</p>
-          <div className="flex items-center justify-center gap-4 text-lg font-bold text-neutral-900">
+        <div className="rounded-lg border border-amarelo-500/25 bg-azul-700 p-4">
+          <p className="mb-2 text-center text-xs font-semibold text-texto-secundario">Rolando agora</p>
+          <div className="flex items-center justify-center gap-4 text-lg font-bold text-amarelo-500">
             <span className={destaque(partidaAtual.time_a_id)}>{nomeTime(partidaAtual.time_a_id)}</span>
             <span>
               {contarGols(partidaAtual, partidaAtual.time_a_id)} × {contarGols(partidaAtual, partidaAtual.time_b_id)}
@@ -131,23 +131,26 @@ export default function JogadorResultado() {
 
       {partidasFinalizadas.length > 0 ? (
         <div>
-          <h2 className="mb-2 text-sm font-semibold text-neutral-900">Confrontos</h2>
-          <ul className="divide-y divide-neutral-200 rounded-lg border border-neutral-200 bg-white text-sm">
+          <h2 className="mb-2 text-sm font-semibold text-white">Confrontos</h2>
+          <ul className="overflow-hidden rounded-lg border border-amarelo-500/25 text-sm">
             {partidasFinalizadas.map((p, i) => (
-              <li key={p.id} className="flex flex-wrap items-center justify-between gap-2 px-4 py-2">
-                <span className="text-neutral-400">#{i + 1}</span>
-                <span>
+              <li
+                key={p.id}
+                className={`flex flex-wrap items-center justify-between gap-2 px-4 py-2 ${i % 2 === 0 ? 'bg-azul-700' : 'bg-azul-900'}`}
+              >
+                <span className="text-texto-secundario">#{i + 1}</span>
+                <span className="text-white/90">
                   <span className={destaque(p.time_a_id)}>{nomeTime(p.time_a_id)}</span>{' '}
                   {contarGols(p, p.time_a_id)} × {contarGols(p, p.time_b_id)}{' '}
                   <span className={destaque(p.time_b_id)}>{nomeTime(p.time_b_id)}</span>
                 </span>
-                <span className="font-medium text-brand-700">🏆 {nomeTime(p.time_vencedor_id)}</span>
+                <span className="font-medium text-amarelo-500">🏆 {nomeTime(p.time_vencedor_id)}</span>
               </li>
             ))}
           </ul>
         </div>
       ) : (
-        !partidaAtual && <p className="text-sm text-neutral-400">Nenhuma partida registrada ainda.</p>
+        !partidaAtual && <p className="text-sm text-texto-secundario">Nenhuma partida registrada ainda.</p>
       )}
     </div>
   )

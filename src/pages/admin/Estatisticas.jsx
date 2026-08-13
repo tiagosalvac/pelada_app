@@ -53,16 +53,16 @@ export default function AdminEstatisticas() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-xl font-semibold text-neutral-900">Estatísticas</h1>
-        <p className="mt-1 text-sm text-neutral-500">Ranking geral, somando todas as peladas.</p>
+        <h1 className="text-xl font-semibold text-white">Estatísticas</h1>
+        <p className="mt-1 text-sm text-texto-secundario">Ranking geral, somando todas as peladas.</p>
       </div>
 
       {erro && (
-        <div className="rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{erro}</div>
+        <div className="rounded-md border border-perigo/40 bg-perigo/10 px-4 py-3 text-sm text-perigo">{erro}</div>
       )}
 
       {carregando ? (
-        <p className="text-sm text-neutral-400">Carregando...</p>
+        <p className="text-sm text-texto-secundario">Carregando...</p>
       ) : (
         <div className="grid gap-4 sm:grid-cols-3">
           <RankingCard
@@ -88,18 +88,18 @@ export default function AdminEstatisticas() {
 
 function RankingCard({ titulo, itens, formatarValor }) {
   return (
-    <div className="rounded-lg border border-neutral-200 bg-white p-4">
-      <h2 className="mb-3 text-sm font-semibold text-neutral-900">{titulo}</h2>
+    <div className="rounded-lg border border-amarelo-500/25 bg-azul-700 p-4">
+      <h2 className="mb-3 text-sm font-semibold text-white">{titulo}</h2>
       {itens.length === 0 ? (
-        <p className="text-xs text-neutral-400">Sem dados ainda.</p>
+        <p className="text-xs text-texto-secundario">Sem dados ainda.</p>
       ) : (
         <ol className="space-y-2">
           {itens.map((item, i) => (
             <li key={item.jogador_id} className="flex items-center justify-between gap-2 text-sm">
-              <span className="min-w-0 truncate text-neutral-700">
+              <span className="min-w-0 truncate text-white/90">
                 {MEDALHAS[i] ?? `${i + 1}.`} {item.nome}
               </span>
-              <span className="shrink-0 font-medium text-neutral-900">{formatarValor(item)}</span>
+              <span className="shrink-0 font-semibold text-amarelo-500">{formatarValor(item)}</span>
             </li>
           ))}
         </ol>
