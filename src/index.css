@@ -1,17 +1,23 @@
 @import "tailwindcss";
 
-/* Cores da "Pelada da VT", extraídas do escudo (public/logo.png). */
+/*
+ * Identidade visual da "Pelada da VT": escudo azul royal com detalhes em
+ * amarelo/ouro e contorno branco. Tokens abaixo geram as classes utilitárias
+ * do Tailwind (bg-azul-900, text-amarelo-500, border-perigo, etc.) — não usar
+ * hex direto nos componentes, sempre passar por um destes tokens.
+ */
 @theme {
-  --color-brand-50: #f3f5fa;
-  --color-brand-100: #e2e8f3;
-  --color-brand-200: #c0cde6;
-  --color-brand-300: #99aed6;
-  --color-brand-400: #597cbd;
-  --color-brand-500: #2d5aac;
-  --color-brand-600: #0b3f9e;
-  --color-brand-700: #093585;
-  --color-brand-800: #082c6f;
-  --color-brand-900: #062357;
-  --color-gold-400: #f9c404;
-  --color-gold-500: #ffbc03;
+  --color-azul-900: #0b2557; /* fundos escuros, header, footer */
+  --color-azul-700: #10367f; /* superfícies, cards */
+  --color-azul-600: #1546a0; /* cor primária (superfícies fortes, cabeçalho de tabela) */
+  --color-azul-500: #1d5ac4; /* hover de primária */
+  --color-azul-100: #e7eefa; /* fundos claros, linhas divisórias */
+
+  --color-amarelo-500: #f9b518; /* destaque, CTAs, badges */
+  --color-amarelo-400: #ffc93c; /* hover do amarelo */
+  --color-amarelo-100: #fff3d6; /* fundo de alertas e realces */
+
+  --color-perigo: #e5484d; /* ações destrutivas / estado "ausente" */
+  --color-texto-secundario: #a9bedf; /* texto secundário / estado "pendente" */
+  --color-borda-input: #2a4e96; /* borda de inputs e selects */
 }

@@ -48,7 +48,7 @@ export default function JogadorIdentificacao() {
   }
 
   if (jogadorAtual) {
-    return <p className="text-sm text-neutral-400">Entrando...</p>
+    return <p className="text-sm text-texto-secundario">Entrando...</p>
   }
 
   const filtrados = jogadores.filter((j) => j.nome.toLowerCase().includes(busca.trim().toLowerCase()))
@@ -56,12 +56,12 @@ export default function JogadorIdentificacao() {
   return (
     <div className="space-y-4">
       <div>
-        <h1 className="text-xl font-semibold text-neutral-900">Quem é você?</h1>
-        <p className="mt-1 text-sm text-neutral-500">Escolha seu nome na lista. Sem senha, sem complicação.</p>
+        <h1 className="text-xl font-semibold text-white">Quem é você?</h1>
+        <p className="mt-1 text-sm text-texto-secundario">Escolha seu nome na lista. Sem senha, sem complicação.</p>
       </div>
 
       {erro && (
-        <div className="rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{erro}</div>
+        <div className="rounded-md border border-perigo/40 bg-perigo/10 px-4 py-3 text-sm text-perigo">{erro}</div>
       )}
 
       <input
@@ -69,25 +69,25 @@ export default function JogadorIdentificacao() {
         value={busca}
         onChange={(e) => setBusca(e.target.value)}
         placeholder="Buscar pelo nome..."
-        className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+        className="w-full rounded-md border border-borda-input bg-azul-700 px-3 py-2 text-sm text-white placeholder:text-texto-secundario focus:border-amarelo-500 focus:outline-none focus:ring-2 focus:ring-amarelo-500"
       />
 
       {carregando ? (
-        <p className="text-sm text-neutral-400">Carregando...</p>
+        <p className="text-sm text-texto-secundario">Carregando...</p>
       ) : filtrados.length === 0 ? (
-        <p className="text-sm text-neutral-400">Nenhum jogador encontrado.</p>
+        <p className="text-sm text-texto-secundario">Nenhum jogador encontrado.</p>
       ) : (
-        <ul className="divide-y divide-neutral-200 rounded-lg border border-neutral-200 bg-white">
-          {filtrados.map((jogador) => (
-            <li key={jogador.id}>
+        <ul className="overflow-hidden rounded-lg border border-amarelo-500/25">
+          {filtrados.map((jogador, i) => (
+            <li key={jogador.id} className={i % 2 === 0 ? 'bg-azul-700' : 'bg-azul-900'}>
               <button
                 type="button"
                 onClick={() => escolher(jogador)}
                 disabled={entrando}
-                className="flex w-full items-center gap-3 px-4 py-3 text-left hover:bg-neutral-50 disabled:opacity-50"
+                className="flex w-full items-center gap-3 px-4 py-3 text-left hover:bg-azul-600/40 disabled:opacity-50"
               >
                 <JogadorAvatar jogador={jogador} />
-                <span className="text-sm font-medium text-neutral-900">{jogador.nome}</span>
+                <span className="text-sm font-medium text-white">{jogador.nome}</span>
               </button>
             </li>
           ))}

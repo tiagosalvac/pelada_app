@@ -12,8 +12,8 @@ const STATUS_LABEL = {
 }
 
 const STATUS_CLASSE = {
-  em_andamento: 'bg-brand-50 text-brand-700',
-  finalizada: 'bg-neutral-100 text-neutral-500',
+  em_andamento: 'bg-amarelo-500 text-azul-900',
+  finalizada: 'bg-azul-600 text-azul-100',
 }
 
 const NUM_TIMES_PADRAO = 3
@@ -578,14 +578,14 @@ export default function AdminPeladaDetalhe() {
   }
 
   if (carregando) {
-    return <p className="text-sm text-neutral-400">Carregando...</p>
+    return <p className="text-sm text-texto-secundario">Carregando...</p>
   }
 
   if (!pelada) {
     return (
       <div className="space-y-4">
-        <p className="text-sm text-red-700">{erro ?? 'Pelada não encontrada.'}</p>
-        <Link to="/admin/peladas" className="text-sm text-brand-700 hover:underline">
+        <p className="text-sm text-perigo">{erro ?? 'Pelada não encontrada.'}</p>
+        <Link to="/admin/peladas" className="text-sm text-amarelo-500 hover:underline">
           ← Voltar pra peladas
         </Link>
       </div>
@@ -595,13 +595,13 @@ export default function AdminPeladaDetalhe() {
   return (
     <div className="space-y-6">
       <div>
-        <Link to="/admin/peladas" className="text-sm text-neutral-400 hover:text-neutral-600">
+        <Link to="/admin/peladas" className="text-sm text-texto-secundario hover:text-amarelo-500">
           ← Peladas
         </Link>
         <div className="mt-1 flex items-center gap-3">
-          <h1 className="text-xl font-semibold text-neutral-900">{formatarData(pelada.data)}</h1>
+          <h1 className="text-xl font-semibold text-white">{formatarData(pelada.data)}</h1>
           <span
-            className={`rounded-full px-2 py-0.5 text-xs font-medium ${STATUS_CLASSE[pelada.status] ?? 'bg-neutral-100 text-neutral-500'}`}
+            className={`rounded-full px-2 py-0.5 text-xs font-medium ${STATUS_CLASSE[pelada.status] ?? 'bg-azul-600 text-azul-100'}`}
           >
             {STATUS_LABEL[pelada.status] ?? pelada.status}
           </span>
@@ -610,7 +610,7 @@ export default function AdminPeladaDetalhe() {
               type="button"
               onClick={finalizarPelada}
               disabled={processando}
-              className="ml-auto rounded-md border border-neutral-300 px-3 py-1.5 text-sm font-medium text-neutral-600 hover:bg-neutral-50 disabled:opacity-50"
+              className="ml-auto rounded-md border border-amarelo-500 px-3 py-1.5 text-sm font-medium text-amarelo-500 hover:bg-amarelo-500/10 disabled:opacity-50"
             >
               Finalizar pelada
             </button>
@@ -619,25 +619,25 @@ export default function AdminPeladaDetalhe() {
       </div>
 
       {erro && (
-        <div className="rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+        <div className="rounded-md border border-perigo/40 bg-perigo/10 px-4 py-3 text-sm text-perigo">
           {erro}
         </div>
       )}
 
       {todosJogadores.length === 0 ? (
-        <p className="text-sm text-neutral-400">
+        <p className="text-sm text-texto-secundario">
           Nenhum jogador cadastrado ainda.{' '}
-          <Link to="/admin/jogadores" className="text-brand-700 hover:underline">
+          <Link to="/admin/jogadores" className="text-amarelo-500 hover:underline">
             Cadastre jogadores
           </Link>{' '}
           antes de montar os times.
         </p>
       ) : (
         <>
-          <div className="flex flex-col gap-3 rounded-lg border border-neutral-200 bg-white p-4 sm:flex-row sm:flex-wrap sm:items-center">
+          <div className="flex flex-col gap-3 rounded-lg border border-amarelo-500/25 bg-azul-700 p-4 sm:flex-row sm:flex-wrap sm:items-center">
             <div className="flex items-center gap-2">
               <label className="flex items-center gap-2 text-sm">
-                <span className="font-medium text-neutral-700">Nº de times</span>
+                <span className="font-medium text-white/90">Nº de times</span>
                 <input
                   type="number"
                   min={NUM_TIMES_MIN}
@@ -645,21 +645,21 @@ export default function AdminPeladaDetalhe() {
                   value={numTimes}
                   onChange={(e) => setNumTimes(Number(e.target.value))}
                   disabled={timesTravados}
-                  className="w-16 rounded-md border border-neutral-300 px-2 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 disabled:opacity-50"
+                  className="w-16 rounded-md border border-borda-input bg-azul-700 px-2 py-2 text-sm text-white focus:border-amarelo-500 focus:outline-none focus:ring-2 focus:ring-amarelo-500 disabled:opacity-50"
                 />
               </label>
               <button
                 type="button"
                 onClick={aplicarNumTimes}
                 disabled={processando || numTimes === times.length || timesTravados}
-                className="rounded-md bg-neutral-900 px-3 py-2 text-sm font-medium text-white hover:bg-neutral-800 disabled:opacity-50"
+                className="rounded-md bg-azul-600 px-3 py-2 text-sm font-medium text-white hover:bg-azul-500 disabled:opacity-50"
               >
                 Aplicar
               </button>
             </div>
 
             {timesTravados && (
-              <span className="text-xs text-amber-600">🔒 Times travados — já tem partida registrada.</span>
+              <span className="text-xs text-amarelo-500">🔒 Times travados — já tem partida registrada.</span>
             )}
 
             <div className="flex gap-2 sm:ml-auto">
@@ -667,7 +667,7 @@ export default function AdminPeladaDetalhe() {
                 type="button"
                 onClick={sortearNovamente}
                 disabled={processando || timesTravados}
-                className="flex-1 rounded-md bg-brand-600 px-3 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-50 sm:flex-none"
+                className="flex-1 rounded-md bg-amarelo-500 px-3 py-2 text-sm font-bold text-azul-900 hover:bg-amarelo-400 disabled:opacity-50 sm:flex-none"
               >
                 🔀 Sortear novamente
               </button>
@@ -675,7 +675,7 @@ export default function AdminPeladaDetalhe() {
                 type="button"
                 onClick={limparTimes}
                 disabled={processando || timesTravados}
-                className="flex-1 rounded-md px-3 py-2 text-sm font-medium text-neutral-500 hover:bg-neutral-100 disabled:opacity-50 sm:flex-none"
+                className="flex-1 rounded-md px-3 py-2 text-sm font-medium text-texto-secundario hover:bg-azul-600 hover:text-white disabled:opacity-50 sm:flex-none"
               >
                 Limpar
               </button>
@@ -683,14 +683,14 @@ export default function AdminPeladaDetalhe() {
           </div>
 
           {!timesTravados && (
-            <p className="text-xs text-neutral-400">
+            <p className="text-xs text-texto-secundario">
               👆 Toque num jogador pra ver os times e mandar ele pra outro.
             </p>
           )}
 
           <div className={`grid gap-4 lg:grid-cols-[260px_1fr] ${processando ? 'opacity-60' : ''}`}>
-            <div className="rounded-lg border border-dashed border-neutral-300 bg-white p-3">
-              <h2 className="mb-2 text-sm font-semibold text-neutral-900">
+            <div className="rounded-lg border border-dashed border-amarelo-500/25 bg-azul-700 p-3">
+              <h2 className="mb-2 text-sm font-semibold text-white">
                 Disponíveis ({disponiveis.length})
               </h2>
 
@@ -699,7 +699,7 @@ export default function AdminPeladaDetalhe() {
                   value=""
                   onChange={(e) => convocarJogador(e.target.value)}
                   disabled={processando}
-                  className="mb-2 w-full rounded-md border border-neutral-300 px-2 py-2 text-xs text-neutral-600 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                  className="mb-2 w-full rounded-md border border-borda-input bg-azul-700 px-2 py-2 text-xs text-white/90 focus:border-amarelo-500 focus:outline-none focus:ring-2 focus:ring-amarelo-500"
                 >
                   <option value="">+ Convocar jogador...</option>
                   {naoConvocados.map((jogador) => (
@@ -724,7 +724,7 @@ export default function AdminPeladaDetalhe() {
                   />
                 ))}
                 {disponiveis.length === 0 && (
-                  <p className="text-xs text-neutral-400">
+                  <p className="text-xs text-texto-secundario">
                     {convocados.length === 0
                       ? 'Ninguém convocado ainda pra essa pelada.'
                       : 'Todo mundo convocado já está em um time.'}
@@ -737,10 +737,10 @@ export default function AdminPeladaDetalhe() {
               {times.map((time) => {
                 const soma = time.jogadores.reduce((acc, j) => acc + (j.nivel ?? NIVEL_PADRAO), 0)
                 return (
-                  <div key={time.id} className="rounded-lg border border-neutral-200 bg-white p-3">
+                  <div key={time.id} className="rounded-lg border border-amarelo-500/25 bg-azul-700 p-3">
                     <div className="mb-2 flex items-center justify-between">
-                      <h2 className="text-sm font-semibold text-neutral-900">{time.nome}</h2>
-                      <span className="text-xs text-neutral-400">
+                      <h2 className="text-sm font-semibold text-white">{time.nome}</h2>
+                      <span className="text-xs text-texto-secundario">
                         {time.jogadores.length} · nível {soma}
                       </span>
                     </div>
@@ -757,7 +757,7 @@ export default function AdminPeladaDetalhe() {
                         />
                       ))}
                       {time.jogadores.length === 0 && (
-                        <p className="text-xs text-neutral-400">Sem jogadores. Toque alguém pra colocar aqui.</p>
+                        <p className="text-xs text-texto-secundario">Sem jogadores. Toque alguém pra colocar aqui.</p>
                       )}
                     </div>
                   </div>
@@ -767,12 +767,12 @@ export default function AdminPeladaDetalhe() {
           </div>
 
           {times.some((t) => t.jogadores.length > 0) && (
-            <div className="flex flex-wrap items-center gap-3 rounded-lg border border-neutral-200 bg-white p-4">
-              <p className="text-sm text-neutral-500">Times prontos? Manda pro grupo do WhatsApp.</p>
+            <div className="flex flex-wrap items-center gap-3 rounded-lg border border-amarelo-500/25 bg-azul-700 p-4">
+              <p className="text-sm text-texto-secundario">Times prontos? Manda pro grupo do WhatsApp.</p>
               <button
                 type="button"
                 onClick={copiarMensagemTimes}
-                className="ml-auto rounded-md bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700"
+                className="ml-auto rounded-md bg-amarelo-500 px-4 py-2 text-sm font-bold text-azul-900 hover:bg-amarelo-400"
               >
                 {copiadoTimes ? 'Copiado ✓' : '📋 Copiar times pro WhatsApp'}
               </button>
@@ -781,15 +781,15 @@ export default function AdminPeladaDetalhe() {
 
           {times.length >= 2 && (
             <div className="space-y-4">
-              <h2 className="text-sm font-semibold text-neutral-900">Partidas</h2>
+              <h2 className="text-sm font-semibold text-white">Partidas</h2>
 
               {peladaFinalizada && !partidaAtual && partidasFinalizadas.length === 0 && (
-                <p className="text-sm text-neutral-400">Pelada finalizada sem partidas registradas.</p>
+                <p className="text-sm text-texto-secundario">Pelada finalizada sem partidas registradas.</p>
               )}
 
               {!peladaFinalizada &&
                 (partidaAtual ? (
-                  <div className="rounded-lg border border-neutral-200 bg-white p-4">
+                  <div className="rounded-lg border border-amarelo-500/25 bg-azul-700 p-4">
                     <div className="grid gap-4 sm:grid-cols-2">
                       {[partidaAtual.time_a_id, partidaAtual.time_b_id].map((timeId) => {
                         const time = timesPorId.get(timeId)
@@ -797,8 +797,8 @@ export default function AdminPeladaDetalhe() {
                         return (
                           <div key={timeId}>
                             <div className="mb-2 flex items-center justify-between">
-                              <h3 className="text-sm font-semibold text-neutral-900">{time?.nome ?? '?'}</h3>
-                              <span className="text-lg font-bold text-neutral-900">{score}</span>
+                              <h3 className="text-sm font-semibold text-white">{time?.nome ?? '?'}</h3>
+                              <span className="text-lg font-bold text-amarelo-500">{score}</span>
                             </div>
                             <div className="space-y-1.5">
                               {(time?.jogadores ?? []).map((jogador) => (
@@ -816,7 +816,7 @@ export default function AdminPeladaDetalhe() {
                                 />
                               ))}
                               {(time?.jogadores ?? []).length === 0 && (
-                                <p className="text-xs text-neutral-400">Time sem jogadores.</p>
+                                <p className="text-xs text-texto-secundario">Time sem jogadores.</p>
                               )}
                             </div>
                           </div>
@@ -824,24 +824,24 @@ export default function AdminPeladaDetalhe() {
                       })}
                     </div>
 
-                    <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-neutral-100 pt-4">
-                      <p className="text-xs text-neutral-400">
+                    <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-amarelo-500/10 pt-4">
+                      <p className="text-xs text-texto-secundario">
                         Esperando: {timesEsperando.length > 0 ? timesEsperando.map((t) => t.nome).join(', ') : '—'}
                       </p>
                       {mostrarEscolhaVencedor ? (
                         <div className="flex flex-wrap items-center gap-2 text-sm">
-                          <span className="text-neutral-500">Empate — quem venceu?</span>
+                          <span className="text-texto-secundario">Empate — quem venceu?</span>
                           <button
                             type="button"
                             onClick={() => encerrarPartida(partidaAtual.time_a_id)}
-                            className="rounded-md bg-brand-600 px-3 py-1.5 font-medium text-white hover:bg-brand-700"
+                            className="rounded-md bg-amarelo-500 px-3 py-1.5 font-bold text-azul-900 hover:bg-amarelo-400"
                           >
                             🏆 {timesPorId.get(partidaAtual.time_a_id)?.nome}
                           </button>
                           <button
                             type="button"
                             onClick={() => encerrarPartida(partidaAtual.time_b_id)}
-                            className="rounded-md bg-brand-600 px-3 py-1.5 font-medium text-white hover:bg-brand-700"
+                            className="rounded-md bg-amarelo-500 px-3 py-1.5 font-bold text-azul-900 hover:bg-amarelo-400"
                           >
                             🏆 {timesPorId.get(partidaAtual.time_b_id)?.nome}
                           </button>
@@ -851,7 +851,7 @@ export default function AdminPeladaDetalhe() {
                           type="button"
                           onClick={iniciarEncerramento}
                           disabled={processando}
-                          className="rounded-md bg-neutral-900 px-4 py-2 text-sm font-medium text-white hover:bg-neutral-800 disabled:opacity-50"
+                          className="rounded-md bg-azul-600 px-4 py-2 text-sm font-medium text-white hover:bg-azul-500 disabled:opacity-50"
                         >
                           Encerrar partida
                         </button>
@@ -859,18 +859,18 @@ export default function AdminPeladaDetalhe() {
                     </div>
                   </div>
                 ) : partidas.length === 0 ? (
-                  <div className="rounded-lg border border-dashed border-neutral-300 bg-white p-4">
-                    <p className="mb-3 text-sm font-medium text-neutral-700">Quem começa jogando?</p>
+                  <div className="rounded-lg border border-dashed border-amarelo-500/25 bg-azul-700 p-4">
+                    <p className="mb-3 text-sm font-medium text-white/90">Quem começa jogando?</p>
                     <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
                       <label className="flex-1 text-sm">
-                        <span className="mb-1 block text-xs text-neutral-500">Time</span>
+                        <span className="mb-1 block text-xs text-texto-secundario">Time</span>
                         <select
                           value={timeAId}
                           onChange={(e) => {
                             setTimeAEscolhidoId(e.target.value)
                             if (e.target.value === timeBId) setTimeBEscolhidoId(null)
                           }}
-                          className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                          className="w-full rounded-md border border-borda-input bg-azul-700 px-3 py-2 text-sm text-white focus:border-amarelo-500 focus:outline-none focus:ring-2 focus:ring-amarelo-500"
                         >
                           {times.map((t) => (
                             <option key={t.id} value={t.id}>
@@ -879,13 +879,13 @@ export default function AdminPeladaDetalhe() {
                           ))}
                         </select>
                       </label>
-                      <span className="pb-2 text-center text-sm text-neutral-400">×</span>
+                      <span className="pb-2 text-center text-sm text-texto-secundario">×</span>
                       <label className="flex-1 text-sm">
-                        <span className="mb-1 block text-xs text-neutral-500">Contra</span>
+                        <span className="mb-1 block text-xs text-texto-secundario">Contra</span>
                         <select
                           value={timeBId}
                           onChange={(e) => setTimeBEscolhidoId(e.target.value)}
-                          className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                          className="w-full rounded-md border border-borda-input bg-azul-700 px-3 py-2 text-sm text-white focus:border-amarelo-500 focus:outline-none focus:ring-2 focus:ring-amarelo-500"
                         >
                           {opcoesTimeB.map((t) => (
                             <option key={t.id} value={t.id}>
@@ -898,13 +898,13 @@ export default function AdminPeladaDetalhe() {
                         type="button"
                         onClick={() => comecarJogo(timeAId, timeBId)}
                         disabled={processando || !timeAId || !timeBId}
-                        className="rounded-md bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-50"
+                        className="rounded-md bg-amarelo-500 px-4 py-2 text-sm font-bold text-azul-900 hover:bg-amarelo-400 disabled:opacity-50"
                       >
                         ▶️ Começar jogo
                       </button>
                     </div>
                     {times.length > 2 && (
-                      <p className="mt-3 text-xs text-neutral-400">
+                      <p className="mt-3 text-xs text-texto-secundario">
                         Esperando:{' '}
                         {times
                           .filter((t) => t.id !== timeAId && t.id !== timeBId)
@@ -914,13 +914,13 @@ export default function AdminPeladaDetalhe() {
                     )}
                   </div>
                 ) : (
-                  <div className="rounded-lg border border-dashed border-neutral-300 bg-white p-4 text-center">
-                    <p className="mb-3 text-sm text-neutral-500">Ninguém esperando pra jogar. Pode recomeçar se quiser.</p>
+                  <div className="rounded-lg border border-dashed border-amarelo-500/25 bg-azul-700 p-4 text-center">
+                    <p className="mb-3 text-sm text-texto-secundario">Ninguém esperando pra jogar. Pode recomeçar se quiser.</p>
                     <button
                       type="button"
                       onClick={() => comecarJogo(times[0]?.id, times[1]?.id)}
                       disabled={processando}
-                      className="rounded-md bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-50"
+                      className="rounded-md bg-amarelo-500 px-4 py-2 text-sm font-bold text-azul-900 hover:bg-amarelo-400 disabled:opacity-50"
                     >
                       🔁 Novo confronto
                     </button>
@@ -929,16 +929,19 @@ export default function AdminPeladaDetalhe() {
 
               {partidasFinalizadas.length > 0 && (
                 <div>
-                  <h3 className="mb-2 text-xs font-semibold text-neutral-500">Histórico</h3>
-                  <ul className="divide-y divide-neutral-200 rounded-lg border border-neutral-200 bg-white text-sm">
+                  <h3 className="mb-2 text-xs font-semibold text-texto-secundario">Histórico</h3>
+                  <ul className="overflow-hidden rounded-lg border border-amarelo-500/25 text-sm">
                     {partidasFinalizadas.map((p, i) => (
-                      <li key={p.id} className="flex flex-wrap items-center justify-between gap-2 px-4 py-2">
-                        <span className="text-neutral-400">#{i + 1}</span>
-                        <span className="text-neutral-900">
+                      <li
+                        key={p.id}
+                        className={`flex flex-wrap items-center justify-between gap-2 px-4 py-2 ${i % 2 === 0 ? 'bg-azul-700' : 'bg-azul-900'}`}
+                      >
+                        <span className="text-texto-secundario">#{i + 1}</span>
+                        <span className="text-white">
                           {timesPorId.get(p.time_a_id)?.nome ?? '?'} {contarGols(p, p.time_a_id)} ×{' '}
                           {contarGols(p, p.time_b_id)} {timesPorId.get(p.time_b_id)?.nome ?? '?'}
                         </span>
-                        <span className="font-medium text-brand-700">
+                        <span className="font-medium text-amarelo-500">
                           🏆 {timesPorId.get(p.time_vencedor_id)?.nome ?? '?'}
                         </span>
                       </li>
@@ -951,11 +954,11 @@ export default function AdminPeladaDetalhe() {
 
           {peladaFinalizada && (
             <div className="space-y-4">
-              <h2 className="text-sm font-semibold text-neutral-900">Votação de MVP</h2>
+              <h2 className="text-sm font-semibold text-white">Votação de MVP</h2>
 
               {pelada.avaliacao_aberta ? (
-                <div className="rounded-lg border border-neutral-200 bg-white p-4">
-                  <p className="text-sm text-neutral-500">
+                <div className="rounded-lg border border-amarelo-500/25 bg-azul-700 p-4">
+                  <p className="text-sm text-texto-secundario">
                     {votosMvp.length} de {convocados.length} jogador{convocados.length === 1 ? '' : 'es'} já{' '}
                     {votosMvp.length === 1 ? 'votou' : 'votaram'}.
                   </p>
@@ -963,22 +966,22 @@ export default function AdminPeladaDetalhe() {
                     type="button"
                     onClick={encerrarVotacao}
                     disabled={processando}
-                    className="mt-3 rounded-md bg-neutral-900 px-4 py-2 text-sm font-medium text-white hover:bg-neutral-800 disabled:opacity-50"
+                    className="mt-3 rounded-md bg-azul-600 px-4 py-2 text-sm font-medium text-white hover:bg-azul-500 disabled:opacity-50"
                   >
                     Encerrar votação
                   </button>
                 </div>
               ) : podioMvp.length === 0 ? (
-                <p className="text-sm text-neutral-400">A votação foi encerrada, mas ninguém votou.</p>
+                <p className="text-sm text-texto-secundario">A votação foi encerrada, mas ninguém votou.</p>
               ) : (
-                <div className="space-y-3 rounded-lg border border-neutral-200 bg-white p-4">
-                  <pre className="whitespace-pre-wrap rounded-md bg-neutral-50 p-3 font-sans text-sm text-neutral-800">
+                <div className="space-y-3 rounded-lg border border-amarelo-500/25 bg-azul-700 p-4">
+                  <pre className="whitespace-pre-wrap rounded-md bg-azul-900 p-3 font-sans text-sm text-white/90">
                     {mensagemMvp}
                   </pre>
                   <button
                     type="button"
                     onClick={copiarMensagem}
-                    className="rounded-md bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700"
+                    className="rounded-md bg-amarelo-500 px-4 py-2 text-sm font-bold text-azul-900 hover:bg-amarelo-400"
                   >
                     {copiado ? 'Copiado ✓' : '📋 Copiar mensagem'}
                   </button>
@@ -1001,8 +1004,8 @@ function JogadorCard({ jogador, bloqueado, expandido, onToggle, destinos, onMove
 
   return (
     <div
-      className={`rounded-md border bg-neutral-50 ${
-        expandido ? 'border-brand-400 ring-1 ring-brand-400' : 'border-neutral-200'
+      className={`rounded-md border bg-azul-900 ${
+        expandido ? 'border-amarelo-500 ring-1 ring-amarelo-500' : 'border-amarelo-500/10'
       }`}
     >
       <div
@@ -1015,17 +1018,17 @@ function JogadorCard({ jogador, bloqueado, expandido, onToggle, destinos, onMove
             onToggle()
           }
         }}
-        className={`flex items-center gap-2 px-2 py-2 ${bloqueado ? '' : 'cursor-pointer active:bg-neutral-100'}`}
+        className={`flex items-center gap-2 px-2 py-2 ${bloqueado ? '' : 'cursor-pointer active:bg-azul-700'}`}
       >
         <JogadorAvatar jogador={jogador} className="h-8 w-8 shrink-0 text-xs" />
         <div className="min-w-0 flex-1">
-          <p className="truncate text-sm text-neutral-900">{jogador.nome}</p>
-          <p className="text-xs text-neutral-400">
+          <p className="truncate text-sm text-white">{jogador.nome}</p>
+          <p className="text-xs text-texto-secundario">
             {sigla ?? '—'} · Nv {jogador.nivel ?? '-'}
           </p>
         </div>
         {!bloqueado && (
-          <span className={`shrink-0 text-xs font-medium ${expandido ? 'text-brand-600' : 'text-neutral-300'}`}>
+          <span className={`shrink-0 text-xs font-medium ${expandido ? 'text-amarelo-500' : 'text-texto-secundario'}`}>
             {expandido ? 'fechar ▲' : 'mover ⇄'}
           </span>
         )}
@@ -1037,7 +1040,7 @@ function JogadorCard({ jogador, bloqueado, expandido, onToggle, destinos, onMove
               onRemover()
             }}
             title="Remover da pelada"
-            className="-my-2 -mr-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-md text-neutral-300 hover:bg-red-50 hover:text-red-600"
+            className="-my-2 -mr-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-md text-texto-secundario hover:bg-perigo/10 hover:text-perigo"
           >
             ×
           </button>
@@ -1045,14 +1048,14 @@ function JogadorCard({ jogador, bloqueado, expandido, onToggle, destinos, onMove
       </div>
 
       {expandido && (
-        <div className="flex flex-wrap gap-1.5 border-t border-brand-100 px-2 py-2">
-          <span className="w-full text-xs text-neutral-400">Mover pra:</span>
+        <div className="flex flex-wrap gap-1.5 border-t border-amarelo-500/25 px-2 py-2">
+          <span className="w-full text-xs text-texto-secundario">Mover pra:</span>
           {destinos.map((destino) => (
             <button
               key={destino.id ?? 'disponiveis'}
               type="button"
               onClick={() => onMoverPara(destino.id)}
-              className="rounded-full bg-brand-600 px-3 py-2 text-xs font-medium text-white hover:bg-brand-700"
+              className="rounded-full bg-amarelo-500 px-3 py-2 text-xs font-bold text-azul-900 hover:bg-amarelo-400"
             >
               {destino.nome}
             </button>
@@ -1067,27 +1070,27 @@ function JogadorPartidaLinha({ jogador, gols, onMais, onMenos, disabled }) {
   const sigla = siglaPosicao(jogador.posicao)
 
   return (
-    <div className="flex items-center gap-2 rounded-md border border-neutral-200 bg-neutral-50 px-2 py-1.5">
+    <div className="flex items-center gap-2 rounded-md border border-amarelo-500/10 bg-azul-900 px-2 py-1.5">
       <JogadorAvatar jogador={jogador} className="h-7 w-7 text-xs" />
       <div className="min-w-0 flex-1">
-        <p className="truncate text-sm text-neutral-900">{jogador.nome}</p>
-        <p className="text-xs text-neutral-400">{sigla ?? '—'}</p>
+        <p className="truncate text-sm text-white">{jogador.nome}</p>
+        <p className="text-xs text-texto-secundario">{sigla ?? '—'}</p>
       </div>
       <div className="flex items-center gap-2">
         <button
           type="button"
           onClick={onMenos}
           disabled={disabled || gols === 0}
-          className="flex h-9 w-9 items-center justify-center rounded-md border border-neutral-300 text-base text-neutral-500 hover:bg-neutral-100 disabled:opacity-30"
+          className="flex h-9 w-9 items-center justify-center rounded-md border border-borda-input text-base text-texto-secundario hover:bg-azul-600 disabled:opacity-30"
         >
           −
         </button>
-        <span className="w-4 text-center text-sm font-semibold text-neutral-900">{gols}</span>
+        <span className="w-4 text-center text-sm font-semibold text-amarelo-500">{gols}</span>
         <button
           type="button"
           onClick={onMais}
           disabled={disabled}
-          className="flex h-9 w-9 items-center justify-center rounded-md border border-brand-300 text-base text-brand-700 hover:bg-brand-50 disabled:opacity-30"
+          className="flex h-9 w-9 items-center justify-center rounded-md border border-amarelo-500/40 text-base text-amarelo-500 hover:bg-amarelo-500/10 disabled:opacity-30"
         >
           +
         </button>

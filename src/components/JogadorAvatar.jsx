@@ -15,7 +15,7 @@ export default function JogadorAvatar({ jogador, className = 'h-10 w-10 text-sm'
 
   return (
     <div
-      className={`flex shrink-0 items-center justify-center rounded-full bg-neutral-100 font-medium text-neutral-500 ${className}`}
+      className={`flex shrink-0 items-center justify-center rounded-full bg-azul-600 font-medium text-white ${className}`}
     >
       {jogador.nome.charAt(0).toUpperCase()}
     </div>
