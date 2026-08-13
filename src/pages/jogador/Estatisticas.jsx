@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Navigate } from 'react-router-dom'
 import { supabase } from '../../lib/supabaseClient'
 import { useJogadorAtual } from '../../context/JogadorAtualContext'
 
@@ -12,6 +13,9 @@ export default function JogadorEstatisticas() {
   const [erro, setErro] = useState(null)
 
   useEffect(() => {
+    // sem jogador identificado não tem o que carregar — a linha de baixo já
+    // manda a pessoa de volta pra escolha de nome
+    if (!jogadorAtual) return
     carregar()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -34,6 +38,12 @@ export default function JogadorEstatisticas() {
       setMvps(mvpsResp.data)
     }
     setCarregando(false)
+  }
+
+  // Pode acontecer de chegar aqui sem jogador (ex: trocou de jogador nessa
+  // mesma tela, ou abriu o link direto sem escolher o nome antes).
+  if (!jogadorAtual) {
+    return <Navigate to="/jogador" replace />
   }
 
   return (

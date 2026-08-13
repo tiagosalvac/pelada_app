@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate, Link, Navigate } from 'react-router-dom'
 import { supabase } from '../../lib/supabaseClient'
 import { useJogadorAtual } from '../../context/JogadorAtualContext'
 import { buscarPeladaMaisRecenteDoJogador } from '../../lib/peladas'
@@ -26,6 +26,9 @@ export default function JogadorAvaliar() {
   const ultimaRequisicaoRef = useRef(0)
 
   useEffect(() => {
+    // sem jogador identificado não tem o que carregar — a linha de baixo já
+    // manda a pessoa de volta pra escolha de nome
+    if (!jogadorAtual) return
     carregar()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -96,6 +99,12 @@ export default function JogadorAvaliar() {
     }
 
     navigate('/jogador/resultado')
+  }
+
+  // Pode acontecer de chegar aqui sem jogador (ex: trocou de jogador nessa
+  // mesma tela, ou abriu o link direto sem escolher o nome antes).
+  if (!jogadorAtual) {
+    return <Navigate to="/jogador" replace />
   }
 
   if (carregando) {

@@ -1,4 +1,4 @@
-import { NavLink, Outlet } from 'react-router-dom'
+import { NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { useJogadorAtual } from '../context/JogadorAtualContext'
 
 const linkClass = ({ isActive }) =>
@@ -7,7 +7,16 @@ const linkClass = ({ isActive }) =>
   }`
 
 export default function JogadorLayout() {
+  const navigate = useNavigate()
   const { jogadorAtual, setJogadorAtual } = useJogadorAtual()
+
+  // Ao trocar de jogador, manda de volta pra escolha de nome — sem isso, quem
+  // estivesse numa tela que assume "sempre tem um jogadorAtual" (ex: Resultado)
+  // ficava na página e quebrava ao tentar ler dados de um jogador nulo.
+  function trocarJogador() {
+    setJogadorAtual(null)
+    navigate('/jogador')
+  }
 
   return (
     <div className="min-h-screen bg-azul-900">
@@ -31,7 +40,7 @@ export default function JogadorLayout() {
               </NavLink>
               <button
                 type="button"
-                onClick={() => setJogadorAtual(null)}
+                onClick={trocarJogador}
                 className="ml-auto shrink-0 whitespace-nowrap pl-2 text-xs text-texto-secundario hover:text-amarelo-500 sm:text-sm"
               >
                 {jogadorAtual.nome} · trocar
